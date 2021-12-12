@@ -1,0 +1,8 @@
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.AssemblyReference.cache
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.SuggestedBindingRedirects.cache
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.CoreCompileInputs.cache
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.exe.config
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.exe
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.pdb
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.exe
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.pdb
