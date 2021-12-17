@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
@@ -9,19 +10,130 @@ namespace Gestion_e_commerce
     public class Categorie
     {
         public int id;
-        public string nom;
+        public string name;
+
+        public void Add(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("insert into categorie(nom) values('{0}')", this.name);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        public void Delete(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("delete from categorie where nom='{0}'", this.name);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        public void ReadId (SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("select Id_categorie from categorie where nom='{0}'", this.name);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                Console.WriteLine(reader[0]);
+                this.id = Int32.Parse(reader[0].ToString());
+            }
+      
+            reader.Close();
+        }
+
+        public void listCategories (SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = "select * from categorie";
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            int miseenpage;
+            while (reader.Read())
+            {
+                Console.Write("\n");
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    if (i == 1) miseenpage = 20;
+                    else miseenpage = reader.GetName(i).Length + 2;
+                    Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                }
+            }
+
+            while (reader.Read())
+            {
+                Console.Write("\n");
+                for (int i = 1; i < reader.FieldCount; i++)
+                {
+                    if (i == 1) miseenpage = 20;
+                    else miseenpage = reader.GetValue(i).ToString().Length + 2;
+                    Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                }
+            }
+
+            reader.Close();
+        }
     }
 
-    public class Produit
+    public class Product
     {
         public int id;
-        public string nom;
-        public string description;
+        public string name;
+        public string desc;
         public string addedAt;
-        public int prix;
+        public double price;
+        public Categorie cat;
 
-        public static void Initialise()
+        public void Initialise ()
         {
+            this.cat = new Categorie();
+        }
+
+        public void Read()
+        {
+            Console.WriteLine("[{0}, {1}, {2}, {3}]", name, desc, addedAt, price); // Formater la date                                                                      // Ajouter les affichages sur l'interface graphique      
+        }
+
+        public string ToPointStr (string str)
+        {
+            string mod = @"\s*,\s*";
+            Regex reg = new Regex(mod);
+            string[] nmbrs = reg.Split(str);
+            if (nmbrs.Length == 2)
+            {
+                return (nmbrs[0] + "." + nmbrs[1]);
+            }
+
+            else
+            {
+                Console.WriteLine("Erreur de données.");
+                return "";
+            }
+        }
+        public void Add(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie) values('{0}', '{1}', GETDATE(), {2}, {3})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Manage ecommerce website");
             try
             {
                 Console.WriteLine("Trying to read data ...");
@@ -29,127 +141,27 @@ namespace Gestion_e_commerce
                 using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
                 {
                     connection.Open();
-                    SqlCommand command = connection.CreateCommand();
-                    command.CommandText = "select * from categorie";
-                    command.CommandTimeout = 15;
-                    command.CommandType = CommandType.Text;
-                    SqlDataReader reader = command.ExecuteReader();
-                    int miseenpage;
-                    int n;
-                    while (reader.Read())
-                    {
-                        Console.Write("\n");
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            if (i == 1) miseenpage = 20;
-                            else miseenpage = reader.GetName(i).Length + 2;
-                            Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                        }
-                    }
-
-                    while (reader.Read())
-                    {
-                        Console.Write("\n");
-                        for (int i = 1; i < reader.FieldCount; i++)
-                        {
-                            if (i == 1) miseenpage = 20;
-                            else miseenpage = reader.GetValue(i).ToString().Length + 2;
-                            Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                        }
-                    }
+                    Categorie cat = new Categorie();
+                    Product prod = new Product();
+                    prod.name = "Strawberry";
+                    prod.desc = "The best fruit you can eat !";
+                    prod.price = 1.99;
+                    cat.name = "fruits";
+                    cat.ReadId(connection);
+                    Console.WriteLine("Id categorie : {0}", cat.id);
+                    prod.cat = new Categorie();
+                    prod.cat.id = cat.id;
+                    prod.Add(connection);
+                    cat.listCategories(connection);
                     connection.Close();
                 }
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine("Erreur d'accès à la base de données ("
-                + ex.Message + ")");
-            }
-            }
-            /*public void Initialise(Produit P)
-            {
-                this.nom = P.nom;
-                this.description = P.description;
-                this.addedAt = P.addedAt;
-                this.prix = P.prix;
-            }
-
-            public void Initialise(int id, string nom, string description, string addedAt, int prix)
-            {
-                this.nom = nom;
-                this.description = description;
-                this.addedAt = addedAt;
-                this.prix = prix;
-                this.id = id;
-            }*/
-
-            void Lire()
-            {
-                Console.WriteLine("[{0}, {1}, {2}, {3}]", nom, description, addedAt, prix); // Formater la date
-                                                                                            // Ajouter les affichages sur l'interface graphique      
-            }
-
-            void Ajouter(SqlConnection connexionSql, Categorie cat)
-            {
-
-            }
-
-            void Ajouter(SqlConnection connexionSql, string nom, string description, string prix, Categorie categorie)
-            {
-
+                Console.WriteLine("Erreur d'accès à la base de données (" + ex.Message + ")");
             }
         }
 
-        class Program
-        {
-            static void Main(string[] args)
-            {
-                Console.WriteLine("Manage ecommerce website");
-                try
-                {
-                    Console.WriteLine("Trying to read data ...");
-
-                    using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
-                    {
-                        connection.Open();
-                        SqlCommand command = connection.CreateCommand();
-                        command.CommandText = "select * from categorie";
-                        command.CommandTimeout = 15;
-                        command.CommandType = CommandType.Text;
-                        SqlDataReader reader = command.ExecuteReader();
-                        int miseenpage;
-                        while (reader.Read())
-                        {
-                            Console.Write("\n");
-                            for (int i = 0; i < reader.FieldCount; i++)
-                            {
-                                if (i == 1) miseenpage = 20;
-                                else miseenpage = reader.GetName(i).Length + 2;
-                                Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                            }
-                        }
-
-                        while (reader.Read())
-                        {
-                            Console.Write("\n");
-                            for (int i = 1; i < reader.FieldCount; i++)
-                            {
-                                if (i == 1) miseenpage = 20;
-                                else miseenpage = reader.GetValue(i).ToString().Length + 2;
-                                Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                            }
-                        }
-                        connection.Close();
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Erreur d'accès à la base de données ("
-                    + ex.Message + ")");
-                }
-            }
-
-        }
+    }
 }
