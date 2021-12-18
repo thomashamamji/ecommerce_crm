@@ -138,6 +138,10 @@ namespace Gestion_e_commerce
             {
                 Console.WriteLine("Trying to read data ...");
 
+                /*                admin.ecommerce_admin_platform w = new admin.ecommerce_admin_platform();
+                */
+                admin.productCategorie f = new admin.productCategorie();
+
                 using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
                 {
                     connection.Open();
@@ -153,6 +157,7 @@ namespace Gestion_e_commerce
                     prod.cat.id = cat.id;
                     prod.Add(connection);
                     cat.listCategories(connection);
+                    f.ShowDialog();
                     connection.Close();
                 }
             }
