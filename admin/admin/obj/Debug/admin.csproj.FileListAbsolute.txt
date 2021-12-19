@@ -7,4 +7,4 @@ C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.pd
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.exe
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.pdb
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.GenerateResource.cache
-C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.Form1.resources
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.productCategorie.resources
