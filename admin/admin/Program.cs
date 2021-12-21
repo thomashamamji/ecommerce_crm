@@ -18,11 +18,24 @@ namespace Gestion_e_commerce
         public DateTime birth; // Required
         public string firstname; // Required
         public string lastname; // Required
+        public bool seller;
+        public bool buyer;
+
+        public static string BoolToIntStr(bool val)
+        {
+            if (val == true) return "1";
+            else return "0";
+        }
+
+        public static bool StrIntToBool(string val)
+        {
+            return val == "1";
+        }
 
         public void Add(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("insert into users(username, email, firstname, lastname, birth) values('{0}', '{1}', '{2}', '{3}', '{4}')", this.name, this.email, this.firstname, this.lastname, this.birth);
+            command.CommandText = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, GETDATE(), GETFATE())", this.name, this.email, this.firstname, this.lastname, this.birth, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
@@ -32,7 +45,7 @@ namespace Gestion_e_commerce
         public void Delete(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("delete from users(email) values ('{0}')", this.email);
+            command.CommandText = String.Format("delete from Utilisateur(email) values ('{0}')", this.email);
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
@@ -43,7 +56,7 @@ namespace Gestion_e_commerce
         {
             User[] users = new User[100];
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("select * from users");
+            command.CommandText = String.Format("select * from Utilisateur");
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
@@ -53,14 +66,18 @@ namespace Gestion_e_commerce
                 Console.Write("\n");
                 for (int i = 1; i < reader.FieldCount; i++)
                 {
-                    users[i - 1].firstname = reader.GetValue(reader.GetOrdinal("firstname")).ToString();
-                    users[i - 1].lastname = reader.GetValue(reader.GetOrdinal("lastname")).ToString();
+                    users[i - 1].firstname = reader.GetValue(reader.GetOrdinal("prenom")).ToString();
+                    users[i - 1].lastname = reader.GetValue(reader.GetOrdinal("nom")).ToString();
                     var cultureInfo = new CultureInfo("fr-FR");
-                    users[i - 1].birth = DateTime.Parse(reader.GetValue(reader.GetOrdinal("birth")).ToString(), cultureInfo);
-                    users[i - 1].name = reader.GetValue(reader.GetOrdinal("username")).ToString();
+                    users[i - 1].birth = DateTime.Parse(reader.GetValue(reader.GetOrdinal("naissance")).ToString(), cultureInfo);
+                    users[i - 1].name = reader.GetValue(reader.GetOrdinal("pseudo")).ToString();
                     users[i - 1].email = reader.GetValue(reader.GetOrdinal("email")).ToString();
+                    users[i - 1].buyer = User.StrIntToBool(reader.GetValue(reader.GetOrdinal("acheteur")).ToString());
+                    users[i - 1].seller = User.StrIntToBool(reader.GetValue(reader.GetOrdinal("vendeur")).ToString());
                 }
             }
+
+            reader.Close();
 
             return users;
         }
@@ -108,37 +125,75 @@ namespace Gestion_e_commerce
             reader.Close();
         }
 
-        public void listCategories (SqlConnection connection)
+        public static void DisplayCategories (System.Windows.Forms.ListBox Obj, SqlConnection connection)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "select * from categorie";
-            command.CommandTimeout = 15;
-            command.CommandType = CommandType.Text;
-            SqlDataReader reader = command.ExecuteReader();
-            int miseenpage;
-            while (reader.Read())
+            // Add Try catch
+            try
             {
-                Console.Write("\n");
-                for (int i = 0; i < reader.FieldCount; i++)
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "select * from categorie";
+                command.CommandTimeout = 15;
+                command.CommandType = CommandType.Text;
+                SqlDataReader reader = command.ExecuteReader();
+                int miseenpage;
+                while (reader.Read())
                 {
-                    if (i == 1) miseenpage = 20;
-                    else miseenpage = reader.GetName(i).Length + 2;
-                    Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                    Console.Write("\n");
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        Console.WriteLine("Reading value {0} ...", i);
+                        if (i == 1) miseenpage = 20;
+                        else miseenpage = reader.GetName(i).Length + 2;
+                        Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                        // cats[i].id = Int32.Parse(reader[reader.GetOrdinal("Id_categorie")].ToString());
+                        Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                    }
                 }
+
+                reader.Close();
             }
 
-            while (reader.Read())
+            catch (Exception ex)
             {
-                Console.Write("\n");
-                for (int i = 1; i < reader.FieldCount; i++)
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static Categorie[] ListCategories (SqlConnection connection)
+        {
+            // Add Try catch
+            try
+            {
+                Categorie[] cats = new Categorie[100];
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "select * from categorie";
+                command.CommandTimeout = 15;
+                command.CommandType = CommandType.Text;
+                SqlDataReader reader = command.ExecuteReader();
+                int miseenpage;
+                while (reader.Read())
                 {
-                    if (i == 1) miseenpage = 20;
-                    else miseenpage = reader.GetValue(i).ToString().Length + 2;
-                    Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                    Console.Write("\n");
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        Console.WriteLine("Reading value {0} ...", i);
+                        if (i == 1) miseenpage = 20;
+                        else miseenpage = reader.GetName(i).Length + 2;
+                        Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
+                        cats[i].id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_categorie")).ToString());
+                        cats[i].name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+                    }
                 }
+
+                reader.Close();
+                return cats;
             }
 
-            reader.Close();
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
     }
 
@@ -198,19 +253,18 @@ namespace Gestion_e_commerce
                 Console.WriteLine("Trying to read data ...");                
 
                 admin.productCategorie f = new admin.productCategorie();
-                System.Windows.Forms.ListBox lu = f.Users;
-                System.Windows.Forms.ListBox lp = f.Products;
-                System.Windows.Forms.ListBox lc = f.Categories;
 
                 // Set fixed sizes to control form f
                 // ...
 
+                // I need to add new columns in mssql db
+
                 using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
                 {
                     connection.Open();
-                    User[] users = new User[100];
-                    users = User.ListUsers(connection); // Needs tests
-                    lu.Items.AddRange(users); // Needs tests
+                    // User[] users = new User[100];
+                    // users = User.ListUsers(connection); // Needs tests
+                    // lu.Items.AddRange(users); // Needs tests
                     Categorie cat = new Categorie();
                     Product prod = new Product();
                     prod.name = "Strawberry";
@@ -222,8 +276,12 @@ namespace Gestion_e_commerce
                     prod.cat = new Categorie();
                     prod.cat.id = cat.id;
                     prod.Add(connection);
-                    cat.listCategories(connection);
+                    Console.WriteLine("Trying to list categories ...");
+                    Console.WriteLine("Ended categories listing !");
+                    Console.WriteLine("Starting to display the list ...");
+                    Categorie.DisplayCategories(f.Categories, connection);
                     f.ShowDialog();
+                    Console.WriteLine("Ended the list project !");
                     connection.Close();
                 }
             }
