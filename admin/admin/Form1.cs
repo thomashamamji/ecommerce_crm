@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace admin
 {
@@ -15,6 +16,13 @@ namespace admin
         public productCategorie()
         {
             InitializeComponent();
+        }
+
+        public void ReadProduct(SqlConnection connection)
+        {
+            Console.WriteLine("Reader product ...");
+
+            Console.WriteLine("Product read !");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -65,6 +73,33 @@ namespace admin
         private void Products_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // Events handling
+        public void products_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.Products.IndexFromPoint(e.Location);
+            if (index != System.Windows.Forms.ListBox.NoMatches)
+            {
+                MessageBox.Show(index.ToString());
+            }
+        }
+
+        public void categories_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.Categories.IndexFromPoint(e.Location);
+            if (index != System.Windows.Forms.ListBox.NoMatches)
+            {
+                MessageBox.Show(index.ToString());
+            }
+        }
+
+        public void users_DoubleClick(object sender, EventArgs e)
+        {
+            if (this.Users.SelectedItem != null)
+            {
+                MessageBox.Show(this.Users.SelectedItem.ToString());
+            }
         }
     }
 }

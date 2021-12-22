@@ -8,6 +8,26 @@ using System.Data;
 
 namespace Gestion_e_commerce
 {
+    public class ReadProduct : EventArgs
+    {
+        public Product Product { get; set; }
+        public void ReadProductEventArgs (string name, SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, GETDATE(), GETFATE())", this.name, this.email, this.firstname, this.lastname, this.birth, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            Product localProduct = new Product();
+            localProduct.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+            localProduct.desc = reader.GetValue(reader.GetOrdinal("description")).ToString();
+            localProduct.price = Double.Parse(reader.GetValue(reader.GetOrdinal("prix")).ToString());
+            localProduct.addedAt = reader.GetValue(reader.GetOrdinal("createdAt")).ToString();
+            reader.Close();
+        }
+    }
+
     public class User
     {
         public int nbProducts;
@@ -52,11 +72,36 @@ namespace Gestion_e_commerce
             reader.Close();
         }
 
-        public static User[] ListUsers (SqlConnection connection)
+        public static void DisplayUsers (System.Windows.Forms.ListBox Obj, SqlConnection connection)
         {
-            User[] users = new User[100];
+            try
+            {
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "select * from utilisateur";
+                command.CommandTimeout = 15;
+                command.CommandType = CommandType.Text;
+                connection.ResetStatistics();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine("Reading field ...");
+                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                }
+
+                reader.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        
+        public static void ListUsers (SqlConnection connection)
+        {
+       
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("select * from Utilisateur");
+            command.CommandText = String.Format("select * from utilisateur");
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
@@ -64,22 +109,12 @@ namespace Gestion_e_commerce
             while (reader.Read())
             {
                 Console.Write("\n");
-                for (int i = 1; i < reader.FieldCount; i++)
-                {
-                    users[i - 1].firstname = reader.GetValue(reader.GetOrdinal("prenom")).ToString();
-                    users[i - 1].lastname = reader.GetValue(reader.GetOrdinal("nom")).ToString();
-                    var cultureInfo = new CultureInfo("fr-FR");
-                    users[i - 1].birth = DateTime.Parse(reader.GetValue(reader.GetOrdinal("naissance")).ToString(), cultureInfo);
-                    users[i - 1].name = reader.GetValue(reader.GetOrdinal("pseudo")).ToString();
-                    users[i - 1].email = reader.GetValue(reader.GetOrdinal("email")).ToString();
-                    users[i - 1].buyer = User.StrIntToBool(reader.GetValue(reader.GetOrdinal("acheteur")).ToString());
-                    users[i - 1].seller = User.StrIntToBool(reader.GetValue(reader.GetOrdinal("vendeur")).ToString());
-                }
+                Console.WriteLine(reader.GetValue(reader.GetOrdinal("nom")));
             }
 
             reader.Close();
 
-            return users;
+            return;
         }
     }
 
@@ -125,9 +160,8 @@ namespace Gestion_e_commerce
             reader.Close();
         }
 
-        public static void DisplayCategories (System.Windows.Forms.ListBox Obj, SqlConnection connection)
+        public static void DisplayAllCategories (System.Windows.Forms.ListBox Obj, SqlConnection connection)
         {
-            // Add Try catch
             try
             {
                 SqlCommand command = connection.CreateCommand();
@@ -135,19 +169,9 @@ namespace Gestion_e_commerce
                 command.CommandTimeout = 15;
                 command.CommandType = CommandType.Text;
                 SqlDataReader reader = command.ExecuteReader();
-                int miseenpage;
                 while (reader.Read())
                 {
-                    Console.Write("\n");
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        Console.WriteLine("Reading value {0} ...", i);
-                        if (i == 1) miseenpage = 20;
-                        else miseenpage = reader.GetName(i).Length + 2;
-                        Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                        // cats[i].id = Int32.Parse(reader[reader.GetOrdinal("Id_categorie")].ToString());
-                        Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
-                    }
+                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
                 }
 
                 reader.Close();
@@ -159,12 +183,11 @@ namespace Gestion_e_commerce
             }
         }
 
-        public static Categorie[] ListCategories (SqlConnection connection)
+        public static void ListCategories (SqlConnection connection)
         {
             // Add Try catch
             try
             {
-                Categorie[] cats = new Categorie[100];
                 SqlCommand command = connection.CreateCommand();
                 command.CommandText = "select * from categorie";
                 command.CommandTimeout = 15;
@@ -180,19 +203,15 @@ namespace Gestion_e_commerce
                         if (i == 1) miseenpage = 20;
                         else miseenpage = reader.GetName(i).Length + 2;
                         Console.Write(reader[i].ToString().PadRight(miseenpage, ' ') + "\t");
-                        cats[i].id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_categorie")).ToString());
-                        cats[i].name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
                     }
                 }
 
                 reader.Close();
-                return cats;
             }
 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
             }
         }
     }
@@ -214,6 +233,29 @@ namespace Gestion_e_commerce
         public void Read()
         {
             Console.WriteLine("[{0}, {1}, {2}, {3}]", name, desc, addedAt, price); // Formater la date                                                                      // Ajouter les affichages sur l'interface graphique      
+        }
+
+        public static void DisplayAllProducts (System.Windows.Forms.ListBox Obj, SqlConnection connection)
+        {
+            try
+            {
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "select * from produit";
+                command.CommandTimeout = 15;
+                command.CommandType = CommandType.Text;
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                }
+
+                reader.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public string ToPointStr (string str)
@@ -262,7 +304,6 @@ namespace Gestion_e_commerce
                 using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
                 {
                     connection.Open();
-                    // User[] users = new User[100];
                     // users = User.ListUsers(connection); // Needs tests
                     // lu.Items.AddRange(users); // Needs tests
                     Categorie cat = new Categorie();
@@ -271,17 +312,22 @@ namespace Gestion_e_commerce
                     prod.desc = "The best fruit you can eat !";
                     prod.price = 1.99;
                     cat.name = "fruits";
-                    cat.ReadId(connection);
-                    Console.WriteLine("Id categorie : {0}", cat.id);
+                    // cat.ReadId(connection);
                     prod.cat = new Categorie();
-                    prod.cat.id = cat.id;
-                    prod.Add(connection);
-                    Console.WriteLine("Trying to list categories ...");
-                    Console.WriteLine("Ended categories listing !");
-                    Console.WriteLine("Starting to display the list ...");
-                    Categorie.DisplayCategories(f.Categories, connection);
+                    // prod.cat.id = cat.id;
+                    // prod.Add(connection);
+                    Console.WriteLine("Trying to list users ...");
+                    User.ListUsers(connection);
+                    Console.WriteLine("Ended users listing !");
+                    Console.WriteLine("Starting to display the lists ...");
+                    Categorie.DisplayAllCategories(f.Categories, connection);
+                    User.DisplayUsers(f.Users, connection);
+                    Product.DisplayAllProducts(f.Products, connection);
+                    Console.WriteLine("Ended listings !");
+                    Console.WriteLine("Displaying widget ...");
+                    f.Users.DoubleClick += new EventHandler(f.users_DoubleClick);
                     f.ShowDialog();
-                    Console.WriteLine("Ended the list project !");
+                    Console.WriteLine("Widget displayed !");
                     connection.Close();
                 }
             }
