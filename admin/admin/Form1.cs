@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using admin_db;
 
 namespace admin
 {
-    public partial class productCategorie : Form
+    public partial class Dashboard : Form
     {
-        public productCategorie()
+        public Dashboard()
         {
             InitializeComponent();
         }
@@ -85,20 +86,30 @@ namespace admin
             }
         }
 
-        public void categories_MouseDoubleClick(object sender, MouseEventArgs e)
+        public void categories_DoubleClick(object sender, EventArgs e, SqlConnection connection)
         {
-            int index = this.Categories.IndexFromPoint(e.Location);
-            if (index != System.Windows.Forms.ListBox.NoMatches)
+            if (this.Categories.SelectedItem != null)
             {
-                MessageBox.Show(index.ToString());
+                string cat_name = this.Categories.SelectedItem.ToString();
+                CategorieTable table = new CategorieTable();
+                table.name = cat_name;
+                table.Read(connection);
+                // Display table.name and table.id values
+                Element item = new Element();
+                item.title.Text = table.name;
+                item.ShowDialog();
             }
         }
 
-        public void users_DoubleClick(object sender, EventArgs e)
+        public void users_DoubleClick(object sender, EventArgs e, SqlConnection connection)
         {
             if (this.Users.SelectedItem != null)
             {
-                MessageBox.Show(this.Users.SelectedItem.ToString());
+                string user_lastname = this.Users.SelectedItem.ToString();
+                Console.WriteLine("Selected {0} !", user_lastname);
+                UserTable table = new UserTable();
+                table.lastname = user_lastname;
+                table.Read(connection);
             }
         }
     }

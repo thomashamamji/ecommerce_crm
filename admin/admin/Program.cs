@@ -5,10 +5,11 @@ using System.Globalization;
 using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
+using admin_db;
 
 namespace Gestion_e_commerce
 {
-    public class ReadProduct : EventArgs
+/*    public class ReadProduct : EventArgs
     {
         public Product Product { get; set; }
         public void ReadProductEventArgs (string name, SqlConnection connection)
@@ -24,9 +25,13 @@ namespace Gestion_e_commerce
             localProduct.desc = reader.GetValue(reader.GetOrdinal("description")).ToString();
             localProduct.price = Double.Parse(reader.GetValue(reader.GetOrdinal("prix")).ToString());
             localProduct.addedAt = reader.GetValue(reader.GetOrdinal("createdAt")).ToString();
+
+            // End
+            Product = localProduct;
             reader.Close();
         }
     }
+*/
 
     public class User
     {
@@ -294,7 +299,7 @@ namespace Gestion_e_commerce
             {
                 Console.WriteLine("Trying to read data ...");                
 
-                admin.productCategorie f = new admin.productCategorie();
+                admin.Dashboard f = new admin.Dashboard();
 
                 // Set fixed sizes to control form f
                 // ...
@@ -304,18 +309,6 @@ namespace Gestion_e_commerce
                 using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
                 {
                     connection.Open();
-                    // users = User.ListUsers(connection); // Needs tests
-                    // lu.Items.AddRange(users); // Needs tests
-                    Categorie cat = new Categorie();
-                    Product prod = new Product();
-                    prod.name = "Strawberry";
-                    prod.desc = "The best fruit you can eat !";
-                    prod.price = 1.99;
-                    cat.name = "fruits";
-                    // cat.ReadId(connection);
-                    prod.cat = new Categorie();
-                    // prod.cat.id = cat.id;
-                    // prod.Add(connection);
                     Console.WriteLine("Trying to list users ...");
                     User.ListUsers(connection);
                     Console.WriteLine("Ended users listing !");
@@ -325,7 +318,8 @@ namespace Gestion_e_commerce
                     Product.DisplayAllProducts(f.Products, connection);
                     Console.WriteLine("Ended listings !");
                     Console.WriteLine("Displaying widget ...");
-                    f.Users.DoubleClick += new EventHandler(f.users_DoubleClick);
+                    f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, connection));
+                    f.Users.DoubleClick += new EventHandler((sender, e) => f.users_DoubleClick(sender, e, connection));
                     f.ShowDialog();
                     Console.WriteLine("Widget displayed !");
                     connection.Close();
