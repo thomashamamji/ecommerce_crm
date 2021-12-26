@@ -63,6 +63,8 @@ namespace admin_db
             Console.WriteLine(reader[0]);
             this.id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_utilisateur")).ToString());
             this.firstname = reader.GetValue(reader.GetOrdinal("prenom")).ToString();
+            this.lastname = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+            this.bornAt = reader.GetValue(reader.GetOrdinal("naissance")).ToString();
             Console.WriteLine("id : {0}, firstname : {1}", this.id, this.firstname);
             reader.Close();
         }

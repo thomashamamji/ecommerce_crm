@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using admin_db;
+using System.Text.RegularExpressions;
 
 namespace admin
 {
@@ -95,10 +96,21 @@ namespace admin
                 table.name = cat_name;
                 table.Read(connection);
                 // Display table.name and table.id values
-                Element item = new Element();
-                item.title.Text = table.name;
-                item.ShowDialog();
             }
+        }
+
+        public int BoolToInt(bool boolean)
+        {
+            if (boolean) return 1;
+            return 0;
+        }
+
+        public string GetAgeStr(string date)
+        {
+            DateTime d = DateTime.Parse(date);
+            DateTime now = DateTime.Now;
+            int age = now.Year - d.Year + BoolToInt(now.Month >= d.Month && now.Day >= d.Day);
+            return age.ToString();
         }
 
         public void users_DoubleClick(object sender, EventArgs e, SqlConnection connection)
@@ -110,6 +122,18 @@ namespace admin
                 UserTable table = new UserTable();
                 table.lastname = user_lastname;
                 table.Read(connection);
+                UserItem item = new UserItem();
+                item.firstname.Text = table.firstname;
+                item.lastname.Text = table.lastname;
+                item.age.Text = GetAgeStr(table.bornAt); // Get age from date of birth
+                item.username.Text = table.lastname;
+                item.email.Text = table.lastname;
+                // Must count other tables for the rest
+                item.nbProducts.Text = "10";
+                item.nbCategories.Text = "3";
+                item.nbSells.Text = "10";
+                item.nbPurchases.Text = "5";
+                item.ShowDialog();
             }
         }
     }

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace admin
 {
-    public partial class Element : Form
+    public partial class UserItem : Form
     {
-        public Element()
+        public UserItem()
         {
             InitializeComponent();
         }
