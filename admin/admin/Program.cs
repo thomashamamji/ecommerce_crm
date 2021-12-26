@@ -90,7 +90,7 @@ namespace Gestion_e_commerce
                 while (reader.Read())
                 {
                     Console.WriteLine("Reading field ...");
-                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("pseudo")).ToString());
                 }
 
                 reader.Close();

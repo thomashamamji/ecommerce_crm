@@ -117,20 +117,22 @@ namespace admin
         {
             if (this.Users.SelectedItem != null)
             {
-                string user_lastname = this.Users.SelectedItem.ToString();
-                Console.WriteLine("Selected {0} !", user_lastname);
+                string user_username = this.Users.SelectedItem.ToString();
+                Console.WriteLine("Selected {0} !", user_username);
                 UserTable table = new UserTable();
-                table.lastname = user_lastname;
+                table.username = user_username;
                 table.Read(connection);
                 UserItem item = new UserItem();
                 item.firstname.Text = table.firstname;
                 item.lastname.Text = table.lastname;
                 item.age.Text = GetAgeStr(table.bornAt); // Get age from date of birth
-                item.username.Text = table.lastname;
-                item.email.Text = table.lastname;
+                item.username.Text = table.username;
+                item.email.Text = table.email;
+                table.CountCategories(connection);
+                table.CountProducts(connection);
+                item.nbProducts.Text = table.nbProducts.ToString();
+                item.nbCategories.Text = table.nbCategories.ToString();
                 // Must count other tables for the rest
-                item.nbProducts.Text = "10";
-                item.nbCategories.Text = "3";
                 item.nbSells.Text = "10";
                 item.nbPurchases.Text = "5";
                 item.ShowDialog();

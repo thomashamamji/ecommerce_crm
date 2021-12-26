@@ -17,8 +17,11 @@ namespace admin_db
         public string bornAt;
         public string firstname;
         public string lastname;
+        public string username;
         public bool seller;
         public bool buyer;
+        public int nbProducts;
+        public int nbCategories;
 
         public static string BoolToIntStr(bool val)
         {
@@ -54,7 +57,7 @@ namespace admin_db
         public void Read(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("select * from utilisateur where nom='{0}'", this.lastname); // Will add name column later
+            command.CommandText = String.Format("select * from utilisateur where pseudo='{0}'", this.username); // Will add name column later
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
@@ -65,7 +68,32 @@ namespace admin_db
             this.firstname = reader.GetValue(reader.GetOrdinal("prenom")).ToString();
             this.lastname = reader.GetValue(reader.GetOrdinal("nom")).ToString();
             this.bornAt = reader.GetValue(reader.GetOrdinal("naissance")).ToString();
-            Console.WriteLine("id : {0}, firstname : {1}", this.id, this.firstname);
+            this.username = reader.GetValue(reader.GetOrdinal("pseudo")).ToString();
+            this.email = reader.GetValue(reader.GetOrdinal("email")).ToString();
+            reader.Close();
+        }
+
+        public void CountCategories(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur={0});", this.id);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            this.nbCategories = Int32.Parse(reader.GetValue(reader.GetOrdinal("nbCategories")).ToString());
+            reader.Close();
+        }
+
+        public void CountProducts(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur={0});", this.id);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            this.nbProducts = Int32.Parse(reader.GetValue(reader.GetOrdinal("nbProduits")).ToString());
             reader.Close();
         }
     }
@@ -74,6 +102,8 @@ namespace admin_db
     {
         public int id;
         public string name;
+        public int userId;
+        public int nbProducts;
 
         public void Add(SqlConnection connection)
         {
@@ -125,6 +155,70 @@ namespace admin_db
             this.id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_categorie")).ToString());
             this.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
             Console.WriteLine("id : {0}, name : {1}", this.id, this.name);
+            reader.Close();
+        }
+    }
+
+    public class Product
+    {
+        public int id;
+        public int categorieId;
+        public string name;
+        public string desc;
+        public string addedAt;
+        public double price;
+
+        public string ToPointStr(string str)
+        {
+            string mod = @"\s*,\s*";
+            Regex reg = new Regex(mod);
+            string[] nmbrs = reg.Split(str);
+            if (nmbrs.Length == 2)
+            {
+                return (nmbrs[0] + "." + nmbrs[1]);
+            }
+
+            else
+            {
+                Console.WriteLine("Erreur de données.");
+                return "";
+            }
+        }
+        public void Add(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie) values('{0}', '{1}', GETDATE(), {2}, {3})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.categorieId);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        public void Delete(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("delete from produit where name='{0}'",  this.name);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        public void Read(SqlConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = String.Format("select * from produit where nom='{0}'", this.name);
+            command.CommandTimeout = 15;
+            command.CommandType = CommandType.Text;
+            SqlDataReader reader = command.ExecuteReader();
+
+            reader.Read();
+            Console.WriteLine(reader[0]);
+            this.id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_produit")).ToString());
+            this.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+            this.price = Double.Parse(reader.GetValue(reader.GetOrdinal("prix")).ToString());
+            this.desc = reader.GetValue(reader.GetOrdinal("description")).ToString();
+            this.addedAt = reader.GetValue(reader.GetOrdinal("addedAt")).ToString();
             reader.Close();
         }
     }
