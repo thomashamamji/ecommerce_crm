@@ -167,6 +167,7 @@ namespace admin_db
         public string desc;
         public string addedAt;
         public double price;
+        public int nbSells;
         public CategorieTable cat;
 
         public string ToPointStr(string str)
@@ -185,6 +186,52 @@ namespace admin_db
                 return "";
             }
         }
+
+        public void GetCategorie(SqlConnection connection)
+        {
+            if (this.cat.id != -1)
+            {
+                try
+                {
+                    SqlCommand command = connection.CreateCommand();
+                    command.CommandText = String.Format("select nom from categorie where Id_categorie={0}", this.cat.id);
+                    command.CommandTimeout = 15;
+                    command.CommandType = CommandType.Text;
+                    SqlDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    this.cat.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+                    reader.Close();
+                }
+
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Get the categorie from the product name");
+/*                try
+                {
+                    SqlCommand command = connection.CreateCommand();
+                    command.CommandText = String.Format("select name from categorie where Id_categorie={0}", this.cat.id);
+                    command.CommandTimeout = 15;
+                    command.CommandType = CommandType.Text;
+                    SqlDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    this.cat.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
+                    reader.Close();
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }*/
+            }
+        }
+
         public void Add(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
@@ -213,7 +260,6 @@ namespace admin_db
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
-
             reader.Read();
             Console.WriteLine(reader[0]);
             this.id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_produit")).ToString());
@@ -221,6 +267,7 @@ namespace admin_db
             this.price = Double.Parse(reader.GetValue(reader.GetOrdinal("prix")).ToString());
             this.desc = reader.GetValue(reader.GetOrdinal("description")).ToString();
             this.addedAt = reader.GetValue(reader.GetOrdinal("addedAt")).ToString();
+            this.cat.id = Int32.Parse(reader.GetValue(reader.GetOrdinal("Id_categorie")).ToString());
             reader.Close();
         }
     }

@@ -321,6 +321,7 @@ namespace Gestion_e_commerce
                     f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, connection));
                     f.Users.DoubleClick += new EventHandler((sender, e) => f.users_DoubleClick(sender, e, connection));
                     f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, connection));
+                    f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, connection));
                     f.ShowDialog();
                     Console.WriteLine("Widget displayed !");
                     connection.Close();

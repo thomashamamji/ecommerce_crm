@@ -9,3 +9,4 @@ C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.pd
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.GenerateResource.cache
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.Dashboard.resources
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.UserItem.resources
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.ProductItem.resources

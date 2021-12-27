@@ -168,6 +168,31 @@ namespace admin
             }
         }
 
+        public void products_DoubleClick(object sender, EventArgs e, SqlConnection connection)
+        {
+            if (this.Products.SelectedItem != null)
+            {
+                string product_name = this.Products.SelectedItem.ToString();
+                Console.WriteLine("Selected {0} !", product_name);
+                ProductTable table = new ProductTable();
+                table.cat = new CategorieTable();
+                table.cat.id = -1; // To reset the id
+                table.name = product_name;
+                table.Read(connection);
+                ProductItem item = new ProductItem();
+                item.productName.Text = table.name;
+                item.productAddedAt.Text = table.addedAt; // Get age from date of birth
+                item.productDescription.Text = table.desc;
+                item.productPrice.Text = table.price.ToString();
+                // table.CountSells(connection);
+                table.GetCategorie(connection);
+                item.productSells.Text = table.nbSells.ToString();
+                item.productCategorie.Text = table.cat.name.ToString();
+                // Must count other tables for the rest
+                item.ShowDialog();
+            }
+        }
+
         private void label2_Click(object sender, EventArgs e)
         {
 
