@@ -22,14 +22,43 @@ namespace admin
 
         public void ReadProduct(SqlConnection connection)
         {
-            Console.WriteLine("Reader product ...");
+            Console.WriteLine("Reading product ...");
 
             Console.WriteLine("Product read !");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e, SqlConnection connection)
         {
+            // I need to add a categorie field to class the product in it
+            if (this.name.Text != "" && this.productDescription.Text != "" && this.productPrice.Text != "" && this.productCategorie.Text != "")
+            {
+                try
+                {
+                    Console.WriteLine("Trying to create a new product ...");
+                    ProductTable table = new ProductTable();
+                    table.userId = 1; // Will change later with the user auth
+                    table.cat = new CategorieTable();
+                    table.cat.name = this.productCategorie.Text; // User has to choose a categorie
+                    table.cat.ReadId(connection);
+                    table.price = Double.Parse(this.productPrice.Text); // That field needs to be written with a ',' not a '.' !!!
+                    table.name = this.name.Text;
+                    table.desc = this.productDescription.Text;
+                    table.Add(connection);
+                    Console.WriteLine("Ended creating the product !");
+                    // Show a success panel ...
+                }
 
+                catch (Exception ex)
+                {
+                    // Show an error panel ...
+                    Console.WriteLine("Error while adding the product : " + ex);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Form error : missing some fields !");
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -137,6 +166,16 @@ namespace admin
                 item.nbPurchases.Text = "5";
                 item.ShowDialog();
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

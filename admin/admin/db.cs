@@ -159,14 +159,15 @@ namespace admin_db
         }
     }
 
-    public class Product
+    public class ProductTable
     {
         public int id;
-        public int categorieId;
+        public int userId;
         public string name;
         public string desc;
         public string addedAt;
         public double price;
+        public CategorieTable cat;
 
         public string ToPointStr(string str)
         {
@@ -180,14 +181,15 @@ namespace admin_db
 
             else
             {
-                Console.WriteLine("Erreur de données.");
+                Console.WriteLine("Erreur de données pour " + str);
                 return "";
             }
         }
         public void Add(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie) values('{0}', '{1}', GETDATE(), {2}, {3})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.categorieId);
+            Console.WriteLine("{0}", this.ToPointStr(this.price.ToString()));
+            command.CommandText = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', GETDATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
             command.CommandTimeout = 15;
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
