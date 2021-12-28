@@ -20,13 +20,6 @@ namespace admin
             InitializeComponent();
         }
 
-        public void ReadProduct(SqlConnection connection)
-        {
-            Console.WriteLine("Reading product ...");
-
-            Console.WriteLine("Product read !");
-        }
-
         public void button1_Click(object sender, EventArgs e, SqlConnection connection)
         {
             // I need to add a categorie field to class the product in it

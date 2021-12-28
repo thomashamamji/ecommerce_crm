@@ -44,6 +44,34 @@ namespace admin_db
             reader.Close();
         }
 
+        public void Edit(SqlConnection connection)
+        {
+            if (this.email != "" && this.username != "" && this.firstname != "" && this.lastname != "" && this.id != -1)
+            {
+                try
+                {
+                    Console.WriteLine("Trying to update user table ...");
+                    SqlCommand command = connection.CreateCommand();
+                    command.CommandText = String.Format("update Utilisateur set username='{0}', email='{1}', firstname='{2}', lastname='{3}', vendeur={4}, acheteur={5}, updatedAt=GETDATE() where Id_utilisateur={6}", this.username, this.email, this.firstname, this.lastname, BoolToIntStr(this.seller), BoolToIntStr(this.buyer), this.id); ;
+                    command.CommandTimeout = 15;
+                    command.CommandType = CommandType.Text;
+                    SqlDataReader reader = command.ExecuteReader();
+                    reader.Close();
+                    Console.WriteLine("Updated table successfully !");
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Error : missing data");
+            }
+        }
+
         public void Delete(SqlConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
@@ -241,6 +269,33 @@ namespace admin_db
             command.CommandType = CommandType.Text;
             SqlDataReader reader = command.ExecuteReader();
             reader.Close();
+        }
+
+        public void Edit(SqlConnection connection)
+        {
+            if (this.name != "" && this.desc != "" && this.price != 0 && this.id != -1) {
+                try
+                {
+                    Console.WriteLine("Trying to edit product table ...");
+                    SqlCommand command = connection.CreateCommand();
+                    command.CommandText = String.Format("update produit set nom='{0}', description='{1}', prix={2}) where Id_produit={3}", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.id);
+                    command.CommandTimeout = 15;
+                    command.CommandType = CommandType.Text;
+                    SqlDataReader reader = command.ExecuteReader();
+                    reader.Close();
+                    Console.WriteLine("Table edited successfully !");
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Failed to edit table : missing some fields");
+            }
         }
 
         public void Delete(SqlConnection connection)

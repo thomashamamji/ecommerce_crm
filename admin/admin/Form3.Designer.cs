@@ -42,6 +42,8 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.edit = new System.Windows.Forms.Button();
+            this.delete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -177,11 +179,31 @@
             this.label14.TabIndex = 8;
             this.label14.Text = "Prix";
             // 
+            // edit
+            // 
+            this.edit.Location = new System.Drawing.Point(481, 574);
+            this.edit.Name = "edit";
+            this.edit.Size = new System.Drawing.Size(191, 61);
+            this.edit.TabIndex = 14;
+            this.edit.Text = "Modifier";
+            this.edit.UseVisualStyleBackColor = true;
+            // 
+            // delete
+            // 
+            this.delete.Location = new System.Drawing.Point(481, 676);
+            this.delete.Name = "delete";
+            this.delete.Size = new System.Drawing.Size(191, 61);
+            this.delete.TabIndex = 15;
+            this.delete.Text = "Supprimer";
+            this.delete.UseVisualStyleBackColor = true;
+            // 
             // ProductItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1160, 896);
+            this.Controls.Add(this.delete);
+            this.Controls.Add(this.edit);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label11);
@@ -219,5 +241,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
+        public System.Windows.Forms.Button edit;
+        private System.Windows.Forms.Button delete;
     }
 }
