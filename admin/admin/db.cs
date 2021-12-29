@@ -604,22 +604,6 @@ namespace admin_db
 			else
 			{
 				Console.WriteLine("Get the categorie from the product name");
-/*                try
-				{
-					SqlCommand command = connection.CreateCommand();
-					command.CommandText = String.Format("select name from categorie where Id_categorie={0}", this.cat.id);
-					command.CommandTimeout = 15;
-					command.CommandType = CommandType.Text;
-					SqlDataReader reader = command.ExecuteReader();
-					reader.Read();
-					this.cat.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
-					reader.Close();
-				}
-
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex);
-				}*/
 			}
 		}
 
