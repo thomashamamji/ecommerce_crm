@@ -6,6 +6,7 @@ using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
 using admin_db;
+using MySql.Data.MySqlClient;
 
 namespace Gestion_e_commerce
 {
@@ -310,7 +311,10 @@ namespace Gestion_e_commerce
                 {
                     connection.Open();
                     Console.WriteLine("Trying to list users ...");
-                    User.ListUsers(connection);
+                    string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
+                    MySqlConnection conn = new MySqlConnection(connStr);
+                    conn.Open();
+                    MyUser.ListUsers(conn);
                     Console.WriteLine("Ended users listing !");
                     Console.WriteLine("Starting to display the lists ...");
                     Categorie.DisplayAllCategories(f.Categories, connection);

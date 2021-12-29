@@ -5,9 +5,149 @@ using System.Globalization;
 using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace admin_db
 {
+    public class MyUser
+    {
+        public int id;
+        public string name;
+        public string email;
+        public string password;
+        public string bornAt;
+        public string firstname;
+        public string lastname;
+        public string username;
+        public bool seller;
+        public bool buyer;
+        public int nbProducts;
+        public int nbCategories;
+
+        public static void ListUsers(MySqlConnection conn)
+        {
+            try
+            {
+                string sql = "select * from utilisateur";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine(rdr["prenom"] + " -- " + rdr["nom"]);
+                }
+                rdr.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public static string BoolToIntStr(bool val)
+        {
+            if (val == true) return "1";
+            else return "0";
+        }
+
+        public static bool StrIntToBool(string val)
+        {
+            return val == "1";
+        }
+
+        public void Add(MySqlConnection conn)
+        {
+            string sql = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, GETDATE(), GETFATE())", this.name, this.email, this.firstname, this.lastname, this.bornAt, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            rdr.Close();
+        }
+
+        public void Edit(MySqlConnection conn)
+        {
+            if (this.email != "" && this.username != "" && this.firstname != "" && this.lastname != "" && this.id != -1)
+            {
+                try
+                {
+                    Console.WriteLine("Trying to update user table ...");
+                    string sql = String.Format("update Utilisateur set pseudo='{0}', email='{1}', prenom='{2}', nom='{3}', vendeur={4}, acheteur={5}, updatedAt=GETDATE() where Id_utilisateur={6}", this.username, this.email, this.firstname, this.lastname, BoolToIntStr(this.seller), BoolToIntStr(this.buyer), this.id); ;
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    rdr.Close();
+                    Console.WriteLine("Updated table successfully !");
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Error : missing data");
+            }
+        }
+
+        public void Delete(MySqlConnection conn)
+        {
+            string sql = String.Format("delete from Utilisateur(email) values ('{0}')", this.email);
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            rdr.Close();
+        }
+
+        public void Read(MySqlConnection conn)
+        {
+            string sql = String.Format("select * from utilisateur where pseudo='{0}'", this.username); // Will add name column later
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                // Takes the last and unique row
+                this.id = Int32.Parse(rdr["Id_categorie"].ToString());
+                this.firstname = rdr["prenom"].ToString();
+                this.lastname = rdr["nom"].ToString();
+                this.bornAt = rdr["naissance"].ToString();
+                this.username = rdr["pseudo"].ToString();
+                this.email = rdr["email"].ToString();
+            }
+
+            rdr.Close();
+        }
+
+        public void CountCategories(MySqlConnection conn)
+        {
+            string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur={0});", this.id);
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            
+            while (rdr.Read())
+            {
+                // Takes the last and unique row
+                this.nbCategories = Int32.Parse(rdr["nbCategories"].ToString());
+            }
+
+            rdr.Close();
+        }
+
+        public void CountProducts(MySqlConnection conn)
+        {
+            string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur={0});", this.id);
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                // Takes the last and unique row
+                this.nbProducts = Int32.Parse(rdr["nbProduits"].ToString());
+            }
+
+            rdr.Close();
+        }
+    }
+
     public class UserTable
     {
         public int id;
