@@ -78,23 +78,20 @@ namespace Gestion_e_commerce
             reader.Close();
         }
 
-        public static void DisplayUsers (System.Windows.Forms.ListBox Obj, SqlConnection connection)
+        public static void DisplayUsers (System.Windows.Forms.ListBox Obj, MySqlConnection conn)
         {
             try
             {
-                SqlCommand command = connection.CreateCommand();
-                command.CommandText = "select * from utilisateur";
-                command.CommandTimeout = 15;
-                command.CommandType = CommandType.Text;
-                connection.ResetStatistics();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                string sql = "select * from utilisateur";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
                 {
-                    Console.WriteLine("Reading field ...");
-                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("pseudo")).ToString());
+                    Obj.Items.Add(rdr["pseudo"].ToString());
                 }
 
-                reader.Close();
+                rdr.Close();
             }
 
             catch (Exception ex)
@@ -166,21 +163,20 @@ namespace Gestion_e_commerce
             reader.Close();
         }
 
-        public static void DisplayAllCategories (System.Windows.Forms.ListBox Obj, SqlConnection connection)
+        public static void DisplayAllCategories (System.Windows.Forms.ListBox Obj, MySqlConnection conn)
         {
             try
             {
-                SqlCommand command = connection.CreateCommand();
-                command.CommandText = "select * from categorie";
-                command.CommandTimeout = 15;
-                command.CommandType = CommandType.Text;
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                string sql = "select * from categorie";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
                 {
-                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                    Obj.Items.Add(rdr["nom"].ToString());
                 }
 
-                reader.Close();
+                rdr.Close();
             }
 
             catch (Exception ex)
@@ -241,21 +237,20 @@ namespace Gestion_e_commerce
             Console.WriteLine("[{0}, {1}, {2}, {3}]", name, desc, addedAt, price); // Formater la date                                                                      // Ajouter les affichages sur l'interface graphique      
         }
 
-        public static void DisplayAllProducts (System.Windows.Forms.ListBox Obj, SqlConnection connection)
+        public static void DisplayAllProducts (System.Windows.Forms.ListBox Obj, MySqlConnection conn)
         {
             try
             {
-                SqlCommand command = connection.CreateCommand();
-                command.CommandText = "select * from produit";
-                command.CommandTimeout = 15;
-                command.CommandType = CommandType.Text;
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                string sql = "select * from produit";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
                 {
-                    Obj.Items.Add(reader.GetValue(reader.GetOrdinal("nom")).ToString());
+                    Obj.Items.Add(rdr["nom"].ToString());
                 }
 
-                reader.Close();
+                rdr.Close();
             }
 
             catch (Exception ex)
@@ -307,29 +302,27 @@ namespace Gestion_e_commerce
 
                 // I need to add new columns in mssql db
 
-                using (SqlConnection connection = new SqlConnection("Data Source=THOMASHAMAM922E;Initial Catalog=ecommerce_projet_db;Integrated Security=True"))
-                {
-                    connection.Open();
-                    Console.WriteLine("Trying to list users ...");
-                    string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
-                    MySqlConnection conn = new MySqlConnection(connStr);
-                    conn.Open();
-                    MyUser.ListUsers(conn);
-                    Console.WriteLine("Ended users listing !");
-                    Console.WriteLine("Starting to display the lists ...");
-                    Categorie.DisplayAllCategories(f.Categories, connection);
-                    User.DisplayUsers(f.Users, connection);
-                    Product.DisplayAllProducts(f.Products, connection);
-                    Console.WriteLine("Ended listings !");
-                    Console.WriteLine("Displaying widget ...");
-                    f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, connection));
-                    f.Users.DoubleClick += new EventHandler((sender, e) => f.users_DoubleClick(sender, e, connection));
-                    f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, connection));
-                    f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, connection));
-                    f.ShowDialog();
-                    Console.WriteLine("Widget displayed !");
-                    connection.Close();
-                }
+                Console.WriteLine("Trying to list users ...");
+                string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
+                MySqlConnection conn = new MySqlConnection(connStr);
+                conn.Open();
+                MyUser.ListUsers(conn);
+                Console.WriteLine("Ended users listing !");
+                Console.WriteLine("Starting to display the lists ...");
+
+                // Display lists
+                Product.DisplayAllProducts(f.Products, conn);
+                Categorie.DisplayAllCategories(f.Categories, conn);
+                User.DisplayUsers(f.Users, conn);
+
+                Console.WriteLine("Ended listings !");
+                Console.WriteLine("Displaying widget ...");
+                f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, conn));
+                f.Users.DoubleClick += new EventHandler((sender, e) => f.users_DoubleClick(sender, e, conn));
+                f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, conn));
+                f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, conn));
+                f.ShowDialog();
+                Console.WriteLine("Widget displayed !");
             }
 
             catch (Exception ex)
