@@ -19,7 +19,7 @@ namespace admin_db
 			try
 			{
 				if (this.name != "") {
-					Console.WriteLine("Trying to inset data (categorie) ...");
+					Console.WriteLine("Trying to insert data (categorie) ...");
 					string sql = String.Format("insert into categorie(nom) values('{0}')", this.name);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();

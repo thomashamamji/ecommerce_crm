@@ -297,11 +297,10 @@ namespace Gestion_e_commerce
 
                 admin.Dashboard f = new admin.Dashboard();
 
+                // Show and manage form4
+
                 // Set fixed sizes to control form f
-                // ...
-
-                // I need to add new columns in mssql db
-
+                
                 Console.WriteLine("Trying to list users ...");
                 string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
                 MySqlConnection conn = new MySqlConnection(connStr);
