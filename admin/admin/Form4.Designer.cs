@@ -48,7 +48,6 @@
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(269, 31);
             this.password.TabIndex = 1;
-            this.password.Visible = false;
             // 
             // label1
             // 
@@ -63,7 +62,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(870, 539);
+            this.ClientSize = new System.Drawing.Size(793, 504);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.password);
             this.Controls.Add(this.confirm);
@@ -76,8 +75,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button confirm;
-        private System.Windows.Forms.TextBox password;
+        public System.Windows.Forms.Button confirm;
+        public System.Windows.Forms.TextBox password;
         private System.Windows.Forms.Label label1;
     }
 }

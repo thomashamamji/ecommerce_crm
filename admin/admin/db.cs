@@ -6,9 +6,29 @@ using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 namespace admin_db
 {
+	public class Status
+    {
+		public static void PrintSuccess(string txt)
+        {
+			admin.status f = new admin.status();
+			f.msg.Text = txt;
+			f.ShowDialog();
+			f.Close();
+        }
+
+		public static void PrintError(string txt)
+        {
+			admin.status f = new admin.status();
+			f.msg.Text = txt;
+			f.ShowDialog();
+			f.Close();
+		}
+    }
+
 	public class MyCategorie
 	{
 		public int id;
@@ -169,10 +189,18 @@ namespace admin_db
 
 		public void Add(MySqlConnection conn)
 		{
-			string sql = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', CURRENT_DATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			MySqlDataReader rdr = cmd.ExecuteReader();
-			rdr.Close();
+            if(this.name != "") {
+				string sql = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', CURRENT_DATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Close();
+				Status.PrintSuccess("Le produit a été ajouté avec succès !");
+			}
+
+			else
+            {
+				Status.PrintError("Une erreur est survenue dans le programme :(");
+			}
 		}
 
 		public void Edit(MySqlConnection conn)
@@ -240,6 +268,27 @@ namespace admin_db
 		public int nbProducts;
 		public int nbCategories;
 
+		public bool AuthenticateAdmin(MySqlConnection conn)
+        {
+            try
+            {
+				Console.WriteLine("Trying to authenticate as admin ...");
+				string sql = String.Format("select Id_utilisateur from utilisateur where pseudo='admin' and password='{0}'", this.password);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				bool ret = rdr.Read() == true;
+				Console.WriteLine("End of authentication !");
+				rdr.Close();
+				return ret;
+            }
+
+			catch (Exception ex)
+            {
+				Console.WriteLine("Db connection failed : " + ex);
+				return false;
+            }
+        }
+
 		public static void ListUsers(MySqlConnection conn)
 		{
 			try
@@ -273,10 +322,28 @@ namespace admin_db
 
 		public void Add(MySqlConnection conn)
 		{
-			string sql = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, CURRENT_DATE(), GETFATE())", this.username, this.email, this.firstname, this.lastname, this.bornAt, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			MySqlDataReader rdr = cmd.ExecuteReader();
-			rdr.Close();
+			if (this.username != "" && this.firstname != "" && this.lastname != "" && this.email != "" && this.bornAt != "")
+            {
+				try
+                {
+					Console.WriteLine("Adding new user ...");
+					string sql = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, CURRENT_DATE(), GETFATE())", this.username, this.email, this.firstname, this.lastname, this.bornAt, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					rdr.Close();
+					Console.WriteLine("Added new user !");
+				}
+
+				catch(Exception ex)
+                {
+					Console.WriteLine("Failed : " + ex.ToString());
+                }
+            }
+
+			else
+            {
+				Console.WriteLine("Missing some data :(");
+            }
 		}
 
 		public void Edit(MySqlConnection conn)
@@ -307,10 +374,28 @@ namespace admin_db
 
 		public void Delete(MySqlConnection conn)
 		{
-			string sql = String.Format("delete from Utilisateur(email) values ('{0}')", this.email);
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			MySqlDataReader rdr = cmd.ExecuteReader();
-			rdr.Close();
+			if (this.email != "")
+            {
+				try
+                {
+					Console.WriteLine("Deleting user ...");
+					string sql = String.Format("delete from Utilisateur(email) values ('{0}')", this.email);
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					rdr.Close();
+					Console.WriteLine("Deleted user !");
+				}
+				catch(Exception ex)
+                {
+					Status.PrintError("Une erreur est survenue dans le programme :(");
+					Console.WriteLine("Failed to delete user : " + ex.ToString());
+                }
+			}
+
+			else
+            {
+				Console.WriteLine("Missing email field.");
+            }
 		}
 
 		public void Read(MySqlConnection conn)
@@ -333,41 +418,85 @@ namespace admin_db
 				}
 
 				rdr.Close();
+				// Dislpay success panel here
 				Console.WriteLine("User read successfully !");
 			}
 
             catch (Exception ex)
             {
+				// Display error panel here
 				Console.WriteLine(ex);
             }
 		}
 
 		public void CountCategories(MySqlConnection conn)
 		{
-			string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur={0});", this.id);
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			MySqlDataReader rdr = cmd.ExecuteReader();
-			while (rdr.Read())
+			if (this.id != -1)
 			{
-				// Takes the last and unique row
-				this.nbCategories = Int32.Parse(rdr["nbCategories"].ToString());
+				try
+                {
+					Console.WriteLine("Trying to count categories ...");
+					string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur={0});", this.id);
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					while (rdr.Read())
+					{
+						// Takes the last and unique row
+						this.nbCategories = Int32.Parse(rdr["nbCategories"].ToString());
+					}
+
+					rdr.Close();
+					Console.WriteLine("Ended counting categories successfully !");
+				}
+
+				catch (Exception ex)
+                {
+					// Display error panel here
+					Status.PrintError("Une erreur est survenue dans le programme :(");
+					Console.WriteLine("An error occured while trying to count user categories : " + ex.ToString());
+                }
 			}
 
-			rdr.Close();
+			else
+            {
+				// Display error panel here
+				Console.WriteLine("Missing id :(");
+            }
 		}
 
 		public void CountProducts(MySqlConnection conn)
 		{
-			string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur={0});", this.id);
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			MySqlDataReader rdr = cmd.ExecuteReader();
-			while (rdr.Read())
-			{
-				// Takes the last and unique row
-				this.nbProducts = Int32.Parse(rdr["nbProduits"].ToString());
-			}
+			if (id != -1)
+            {
+				try
+                {
+					Console.WriteLine("Trying to count products ...");
+					string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur={0});", this.id);
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					while (rdr.Read())
+					{
+						// Takes the last and unique row
+						this.nbProducts = Int32.Parse(rdr["nbProduits"].ToString());
+					}
 
-			rdr.Close();
+					rdr.Close();
+					// Display success panel here
+					Console.WriteLine("Ended counting products successfully.");
+				}
+
+				catch (Exception ex)
+                {
+					// Display pannel here
+					Console.WriteLine("Error while counting user products : " + ex.ToString());
+                }
+            }
+
+			else
+            {
+				// Display pannel here
+				Console.WriteLine("Missing some fields.");
+            }
 		}
 	}
 

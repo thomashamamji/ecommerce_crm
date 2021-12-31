@@ -11,7 +11,7 @@ using MySql.Data.MySqlClient;
 namespace Gestion_e_commerce
 {
 /*    public class ReadProduct : EventArgs
-    {
+       {
         public Product Product { get; set; }
         public void ReadProductEventArgs (string name, SqlConnection connection)
         {
@@ -293,18 +293,24 @@ namespace Gestion_e_commerce
             Console.WriteLine("Manage ecommerce website");
             try
             {
-                Console.WriteLine("Trying to read data ...");                
-
-                admin.Dashboard f = new admin.Dashboard();
-
-                // Show and manage form4
-
-                // Set fixed sizes to control form f
-                
-                Console.WriteLine("Trying to list users ...");
+                Console.WriteLine("Opening login form ...");
                 string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
                 MySqlConnection conn = new MySqlConnection(connStr);
                 conn.Open();
+                admin.adminLogin login = new admin.adminLogin();
+                login.confirm.Click += new EventHandler((sender, e) => login.confirm_Click(sender, e, conn));
+                login.ShowDialog();
+                Console.WriteLine("Opened login form ! And waiting for authentication ...");
+
+                /*// Add confirm click event
+
+                admin.Dashboard f = new admin.Dashboard();
+
+                // User needs to authenticate to continue ...
+
+                // Set fixed sizes to control form f
+
+                Console.WriteLine("Trying to list users ...");
                 MyUser.ListUsers(conn);
                 Console.WriteLine("Ended users listing !");
                 Console.WriteLine("Starting to display the lists ...");
@@ -313,7 +319,6 @@ namespace Gestion_e_commerce
                 Product.DisplayAllProducts(f.Products, conn);
                 Categorie.DisplayAllCategories(f.Categories, conn);
                 User.DisplayUsers(f.Users, conn);
-
                 Console.WriteLine("Ended listings !");
                 Console.WriteLine("Displaying widget ...");
                 f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, conn));
@@ -321,7 +326,7 @@ namespace Gestion_e_commerce
                 f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, conn));
                 f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, conn));
                 f.ShowDialog();
-                Console.WriteLine("Widget displayed !");
+                Console.WriteLine("Widget displayed !");*/
             }
 
             catch (Exception ex)

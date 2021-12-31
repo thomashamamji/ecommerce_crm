@@ -40,6 +40,7 @@ namespace admin
                     table.Add(conn);
                     Console.WriteLine("Ended creating the product !");
                     // Show a success panel ...
+                    // Refresh the displayed list
                 }
 
                 catch (Exception ex)

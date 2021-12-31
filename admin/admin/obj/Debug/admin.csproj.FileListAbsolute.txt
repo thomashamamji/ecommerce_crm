@@ -27,3 +27,5 @@ C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\MySql.Da
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\bin\Debug\MySql.Web.xml
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.exe.config
 C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.CopyComplete
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.adminLogin.resources
+C:\Users\thomashamamji\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.status.resources
