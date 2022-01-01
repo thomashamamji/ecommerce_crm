@@ -289,6 +289,29 @@ namespace admin_db
             }
         }
 
+		public void ReadId(MySqlConnection conn)
+		{
+			try
+			{
+				Console.WriteLine("Trying to read user id ...");
+				string sql = String.Format("select Id_utilisateur from utilisateur where pseudo='{0}'", this.username);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader(); ;
+				while (rdr.Read())
+				{
+					this.id = Int32.Parse(rdr["Id_utilisateur"].ToString());
+				}
+
+				rdr.Close();
+				Console.WriteLine("User id ({0}) read successfully !", this.id);
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+			}
+		}
+
 		public static void ListUsers(MySqlConnection conn)
 		{
 			try
@@ -436,7 +459,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Trying to count categories ...");
-					string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur={0});", this.id);
+					string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur=utilisateur.Id_utilisateur) where utilisateur.Id_utilisateur={0};", this.id);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					while (rdr.Read())
@@ -471,7 +494,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Trying to count products ...");
-					string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur={0});", this.id);
+					string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur=utilisateur.Id_utilisateur) where utilisateur.Id_utilisateur={0};", this.id);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					while (rdr.Read())

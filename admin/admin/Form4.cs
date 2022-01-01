@@ -20,6 +20,11 @@ namespace admin
             InitializeComponent();
         }
 
+        public class Session
+        {
+            public static int userId;
+        }
+
         public void confirm_Click(object sender, EventArgs e, MySqlConnection connection)
         {
             if (this.password.Text != "")
@@ -30,6 +35,7 @@ namespace admin
                 bool authenticated = table.AuthenticateAdmin(connection);
                 if (authenticated)
                 {
+                    Session.userId = 0;
                     Console.WriteLine("Authenticated !");
                     Console.WriteLine("Closing login window ...");
                     this.Hide();

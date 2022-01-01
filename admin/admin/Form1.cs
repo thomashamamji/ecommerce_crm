@@ -21,6 +21,11 @@ namespace admin
             InitializeComponent();
         }
 
+        public class Session
+        {
+            public int userId;
+        }
+
         public void button1_Click(object sender, EventArgs e, MySqlConnection conn)
         {
             // I need to add a categorie field to class the product in it
@@ -166,6 +171,7 @@ namespace admin
                 MyUser table = new MyUser();
                 table.username = user_username;
                 table.Read(conn);
+                table.ReadId(conn);
                 UserItem item = new UserItem();
                 item.firstname.Text = table.firstname;
                 item.lastname.Text = table.lastname;
