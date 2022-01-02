@@ -273,10 +273,11 @@ namespace admin_db
             try
             {
 				Console.WriteLine("Trying to authenticate as admin ...");
-				string sql = String.Format("select Id_utilisateur from utilisateur where pseudo='admin' and password='{0}'", this.password);
+				string sql = String.Format("select Id_utilisateur from utilisateur where pseudo='{0}' and password='{1}'", this.username, this.password);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				bool ret = rdr.Read() == true;
+				if (ret) this.id = Int32.Parse(rdr["Id_utilisateur"].ToString());
 				Console.WriteLine("End of authentication !");
 				rdr.Close();
 				return ret;

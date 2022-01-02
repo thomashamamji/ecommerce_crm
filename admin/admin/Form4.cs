@@ -31,11 +31,13 @@ namespace admin
             {
                 // Call the db request to authenticate ...
                 MyUser table = new MyUser();
+                // Setting credentials ...
+                table.username = this.username.Text;
                 table.password = this.password.Text;
                 bool authenticated = table.AuthenticateAdmin(connection);
                 if (authenticated)
                 {
-                    Session.userId = 0;
+                    Session.userId = table.id;
                     Console.WriteLine("Authenticated !");
                     Console.WriteLine("Closing login window ...");
                     this.Hide();
@@ -59,10 +61,10 @@ namespace admin
                     User.DisplayUsers(f.Users, connection);
                     Console.WriteLine("Ended listings !");
                     Console.WriteLine("Displaying widget ...");
-                    f.Categories.DoubleClick += new EventHandler((s, ev) => f.categories_DoubleClick(s, ev, connection));
-                    f.Users.DoubleClick += new EventHandler((s, ev) => f.users_DoubleClick(s, ev, connection));
-                    f.confirm.Click += new EventHandler((s, ev) => f.button1_Click(s, ev, connection));
-                    f.Products.DoubleClick += new EventHandler((s, ev) => f.products_DoubleClick(s, ev, connection));
+                    f.Categories.DoubleClick += new EventHandler((s, ev) => f.categories_DoubleClick(s, ev, connection, Session.userId));
+                    f.Users.DoubleClick += new EventHandler((s, ev) => f.users_DoubleClick(s, ev, connection, Session.userId));
+                    f.confirm.Click += new EventHandler((s, ev) => f.button1_Click(s, ev, connection, Session.userId));
+                    f.Products.DoubleClick += new EventHandler((s, ev) => f.products_DoubleClick(s, ev, connection, Session.userId));
                     f.ShowDialog();
                     Console.WriteLine("Widget displayed !");
                 }

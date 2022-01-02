@@ -31,6 +31,7 @@
             this.confirm = new System.Windows.Forms.Button();
             this.password = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.username = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // confirm
@@ -44,7 +45,7 @@
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(243, 205);
+            this.password.Location = new System.Drawing.Point(243, 215);
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(269, 31);
             this.password.TabIndex = 1;
@@ -52,17 +53,25 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(243, 105);
+            this.label1.Location = new System.Drawing.Point(238, 87);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(296, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Connexion de l\'administrateur";
+            // 
+            // username
+            // 
+            this.username.Location = new System.Drawing.Point(243, 155);
+            this.username.Name = "username";
+            this.username.Size = new System.Drawing.Size(269, 31);
+            this.username.TabIndex = 3;
             // 
             // adminLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 504);
+            this.Controls.Add(this.username);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.password);
             this.Controls.Add(this.confirm);
@@ -78,5 +87,6 @@
         public System.Windows.Forms.Button confirm;
         public System.Windows.Forms.TextBox password;
         private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.TextBox username;
     }
 }

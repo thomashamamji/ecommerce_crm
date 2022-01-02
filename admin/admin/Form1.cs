@@ -23,10 +23,10 @@ namespace admin
 
         public class Session
         {
-            public int userId;
+            public static int userId;
         }
 
-        public void button1_Click(object sender, EventArgs e, MySqlConnection conn)
+        public void button1_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
             // I need to add a categorie field to class the product in it
             if (this.name.Text != "" && this.productDescription.Text != "" && this.productPrice.Text != "" && this.productCategorie.Text != "")
@@ -35,7 +35,7 @@ namespace admin
                 {
                     Console.WriteLine("Trying to create a new product ...");
                     MyProduct table = new MyProduct();
-                    table.userId = 1; // Will change later with the user auth
+                    table.userId = sessionId; // Will change later with the user auth
                     table.cat = new MyCategorie();
                     table.cat.name = this.productCategorie.Text; // User has to choose a categorie
                     table.cat.ReadId(conn);
@@ -116,7 +116,7 @@ namespace admin
             }
         }
 
-        public void categories_DoubleClick(object sender, EventArgs e, MySqlConnection conn)
+        public void categories_DoubleClick(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
             if (this.Categories.SelectedItem != null)
             {
@@ -162,7 +162,7 @@ namespace admin
             }
         }
 
-        public void users_DoubleClick(object sender, EventArgs e, MySqlConnection conn)
+        public void users_DoubleClick(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
             if (this.Users.SelectedItem != null)
             {
@@ -191,7 +191,7 @@ namespace admin
             }
         }
 
-        public void products_DoubleClick(object sender, EventArgs e, MySqlConnection conn)
+        public void products_DoubleClick(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
             if (this.Products.SelectedItem != null)
             {
