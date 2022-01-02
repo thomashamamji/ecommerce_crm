@@ -21,11 +21,6 @@ namespace admin
             InitializeComponent();
         }
 
-        public class Session
-        {
-            public static int userId;
-        }
-
         public void button1_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
             // I need to add a categorie field to class the product in it
