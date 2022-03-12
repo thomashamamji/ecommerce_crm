@@ -1,2 +1,2 @@
 # ecommerce_crm
-CRM written in c# (for a school project). MySQL, PHP, C#.
+CRM (Customer Relatioship Manager) written in c# (for a school project about managing an ecommerce website). MySQL, PHP, C#.
