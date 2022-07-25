@@ -1,3 +1,5 @@
+-- Run it after initing the database
+
 create table if not exists categorie(
     Id_categorie varchar(255),
     nom varchar(100),

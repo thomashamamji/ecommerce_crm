@@ -1,10 +1,18 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{5DE65B9B-D423-4D05-8CD8-350F42768090}|Default">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="admin/Program.cs">
+    <Files>
+      <File FileName="admin/db.cs" Line="1" Column="1" />
+      <File FileName="admin/App.config" Line="1" Column="1" />
+      <File FileName="admin/Program.cs" Line="344" Column="2" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="admin" expanded="True">
-            <Node name="admin" selected="True" />
+            <Node name="admin" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -13,9 +21,7 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.admin PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

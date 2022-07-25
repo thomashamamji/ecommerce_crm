@@ -294,7 +294,12 @@ namespace Gestion_e_commerce
             try
             {
                 Console.WriteLine("Opening login form ...");
-                string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
+                // string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
+                string DB_HOST = "localhost";
+                string DB_USER = "ecommerce_admin_app_dbuser";
+                string DB_PASS = "app12345$$$$$";
+                string DB_NAME = "ecommerce_admin_app_db";
+                string connStr = String.Format("server={0};userid={1};password={2};database={3}", DB_HOST, DB_USER, DB_PASS, DB_NAME);
                 MySqlConnection conn = new MySqlConnection(connStr);
                 conn.Open();
                 admin.adminLogin login = new admin.adminLogin();
