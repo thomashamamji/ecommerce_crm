@@ -16,6 +16,8 @@ namespace admin_db
 		public static int NO_ERROR = 0;
 		public static int MISSING_FIELD = -1;
 		public static int DB_ERROR = -2;
+		public static int ACCESSS_DENIED = -3;
+		public static int NOT_FOUND = -4;
 
 		public static void PrintCodeContextError (int code) {
 			if (code >= Status.NO_ERROR) return;
@@ -54,7 +56,7 @@ namespace admin_db
 		public int id;
 		public string name;
 
-		public void Add(MySqlConnection conn)
+		public int Add(MySqlConnection conn)
 		{
 			try
 			{
@@ -65,21 +67,24 @@ namespace admin_db
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					rdr.Close();
 					Console.WriteLine("Added categorie successfully !");
+					return Status.NO_ERROR;
 				}
 
 				else
 				{
-					Console.WriteLine("Missing name !");
+					Console.WriteLine("Missing category name.");
+					return Status.MISSING_FIELD;
 				}
 			}
 
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
+				return Status.DB_ERROR;
 			}
 		}
 
-		public void Delete(MySqlConnection conn)
+		public int Delete(MySqlConnection conn)
 		{
 			try
             {
@@ -91,17 +96,50 @@ namespace admin_db
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					rdr.Close();
 					Console.WriteLine("Deleted categorie successfully !");
+					return Status.NO_ERROR;
 				}
 
 				else
                 {
 					Console.WriteLine("Missing name !");
+					return Status.MISSING_FIELD;
                 }
             }
 
 			catch (Exception ex)
             {
 				Console.WriteLine(ex);
+				return Status.DB_ERROR;
+            }
+		}
+
+		// Rename a category
+		public int Edit(MySqlConnection conn)
+		{
+			try
+            {
+				if (this.name != "" && this.id != -1)
+                {
+					Console.WriteLine("Trying to edit categorie ...");
+					string sql = String.Format("update categorie set nom='{1}' where Id_categorie='{0}'", this.id, this.name);
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					rdr.Close();
+					Console.WriteLine("Deleted categorie successfully !");
+					return Status.NO_ERROR;
+				}
+
+				else
+                {
+					Console.WriteLine("Missing some fields.");
+					return Status.MISSING_FIELD;
+                }
+            }
+
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex);
+				return Status.DB_ERROR;
             }
 		}
 
@@ -347,10 +385,12 @@ namespace admin_db
 		public string firstname;
 		public string lastname;
 		public string username;
-		public bool seller;
-		public bool buyer;
+		public bool seller; // As admin
+		public bool buyer; // Blocks the php login (shop catalog) if false
 		public int nbProducts;
 		public int nbCategories;
+		public int[] users; // Id(s) to make operations to user(s)
+		public int permission;
 
 		// No error code for this one (but may change later)
 		public bool AuthenticateAdmin(MySqlConnection conn)
@@ -379,6 +419,38 @@ namespace admin_db
 				return false;
             }
         }
+
+		// New
+		public int GrantPermissionsAsAdmin (MySqlConnection conn) {
+			if (this.users.Length == 0 || this.permission == -1) {
+				Console.WriteLine("Missing user(s) id(s).");
+				return Status.MISSING_FIELD;
+			}
+
+			try {
+				// First, check if all ids are valid (users are found)
+				for (int id = 0; id < this.users.Length; id++) {
+					string sql = String.Format("select Id_utilisateur from utilisateur where Id_utilisateur='{0}'", this.users[id]);
+					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					MySqlDataReader rdr = cmd.ExecuteReader();
+					if (rdr.Read() != true) {
+						Console.WriteLine(String.format("Id {0} not found.", this.users[id].ToString()));
+						return Status.NOT_FOUND;
+					}
+
+					else {
+						string query = String.format("update Utilisateur set vendeur={0} where Id_utilisateur={1}", this.permission, this.users[id].ToString());
+						MySqlCommand cmd = new MySqlCommand(sql, conn);
+						MySqlDataReader rdr = cmd.ExecuteReader();
+					}
+				}
+			}
+
+			catch (Exception ex) {
+				Console.WriteLine(ex.ToString());
+				return Status.DB_ERROR;
+			}
+		}
 
 		public int ReadId(MySqlConnection conn)
 		{
