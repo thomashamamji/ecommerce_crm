@@ -10,30 +10,6 @@ using MySql.Data.MySqlClient;
 
 namespace Gestion_e_commerce
 {
-/*    public class ReadProduct : EventArgs
-       {
-        public Product Product { get; set; }
-        public void ReadProductEventArgs (string name, SqlConnection connection)
-        {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = String.Format("insert into Utilisateur(pseudo, email, prenom, nom, naissance, vendeur, acheteur, createdAt, updatedAt) values('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, GETDATE(), GETFATE())", this.name, this.email, this.firstname, this.lastname, this.birth, BoolToIntStr(this.buyer), BoolToIntStr(this.seller));
-            command.CommandTimeout = 15;
-            command.CommandType = CommandType.Text;
-            SqlDataReader reader = command.ExecuteReader();
-            reader.Read();
-            Product localProduct = new Product();
-            localProduct.name = reader.GetValue(reader.GetOrdinal("nom")).ToString();
-            localProduct.desc = reader.GetValue(reader.GetOrdinal("description")).ToString();
-            localProduct.price = Double.Parse(reader.GetValue(reader.GetOrdinal("prix")).ToString());
-            localProduct.addedAt = reader.GetValue(reader.GetOrdinal("createdAt")).ToString();
-
-            // End
-            Product = localProduct;
-            reader.Close();
-        }
-    }
-*/
-
     public class User
     {
         public int nbProducts;
@@ -294,20 +270,23 @@ namespace Gestion_e_commerce
             try
             {
                 Console.WriteLine("Opening login form ...");
-                // string connStr = @"server=localhost;userid=root;password=;database=ecommerce";
+
+                // Database auth
                 string DB_HOST = "localhost";
                 string DB_USER = "ecommerce_admin_app_dbuser";
                 string DB_PASS = "app12345$$$$$";
                 string DB_NAME = "ecommerce_admin_app_db";
                 string connStr = String.Format("server={0};userid={1};password={2};database={3}", DB_HOST, DB_USER, DB_PASS, DB_NAME);
                 MySqlConnection conn = new MySqlConnection(connStr);
+
+                // Now starting the body of the program
                 conn.Open();
                 admin.adminLogin login = new admin.adminLogin();
                 login.confirm.Click += new EventHandler((sender, e) => login.confirm_Click(sender, e, conn));
                 login.ShowDialog();
                 Console.WriteLine("Opened login form ! And waiting for authentication ...");
 
-                /*// Add confirm click event
+                // Add confirm click event
 
                 admin.Dashboard f = new admin.Dashboard();
 
@@ -316,14 +295,20 @@ namespace Gestion_e_commerce
                 // Set fixed sizes to control form f
 
                 Console.WriteLine("Trying to list users ...");
-                MyUser.ListUsers(conn);
+                int st = MyUser.ListUsers(conn);
+                Status.PrintCodeContextError(st);
+
                 Console.WriteLine("Ended users listing !");
                 Console.WriteLine("Starting to display the lists ...");
 
                 // Display lists
-                Product.DisplayAllProducts(f.Products, conn);
-                Categorie.DisplayAllCategories(f.Categories, conn);
-                User.DisplayUsers(f.Users, conn);
+                st = Product.DisplayAllProducts(f.Products, conn);
+                Status.PrintCodeContextError(st);
+                st = Categorie.DisplayAllCategories(f.Categories, conn);
+                Status.PrintCodeContextError(st);
+                st = User.DisplayUsers(f.Users, conn);
+                Status.PrintCodeContextError(st);
+
                 Console.WriteLine("Ended listings !");
                 Console.WriteLine("Displaying widget ...");
                 f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, conn));
@@ -331,7 +316,7 @@ namespace Gestion_e_commerce
                 f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, conn));
                 f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, conn));
                 f.ShowDialog();
-                Console.WriteLine("Widget displayed !");*/
+                Console.WriteLine("Widget displayed !");
             }
 
             catch (Exception ex)
