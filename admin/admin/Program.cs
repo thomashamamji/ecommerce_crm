@@ -272,7 +272,7 @@ namespace Gestion_e_commerce
                 Console.WriteLine("Opening login form ...");
 
                 // Database auth
-                string DB_HOST = "localhost";
+                string DB_HOST = "192.168.1.102";
                 string DB_USER = "ecommerce_admin_app_dbuser";
                 string DB_PASS = "app12345$$$$$";
                 string DB_NAME = "ecommerce_admin_app_db";
@@ -284,7 +284,6 @@ namespace Gestion_e_commerce
                 admin.adminLogin login = new admin.adminLogin();
                 login.confirm.Click += new EventHandler((sender, e) => login.confirm_Click(sender, e, conn));
                 login.ShowDialog();
-                Console.WriteLine("Opened login form ! And waiting for authentication ...");
 
                 // Add confirm click event
 
@@ -294,27 +293,6 @@ namespace Gestion_e_commerce
 
                 // Set fixed sizes to control form f
 
-                Console.WriteLine("Trying to list users ...");
-                int st = MyUser.ListUsers(conn);
-                Status.PrintCodeContextError(st);
-
-                Console.WriteLine("Ended users listing !");
-                Console.WriteLine("Starting to display the lists ...");
-
-                // Display lists
-                st = Product.DisplayAllProducts(f.Products, conn);
-                Status.PrintCodeContextError(st);
-                st = Categorie.DisplayAllCategories(f.Categories, conn);
-                Status.PrintCodeContextError(st);
-                st = User.DisplayUsers(f.Users, conn);
-                Status.PrintCodeContextError(st);
-
-                Console.WriteLine("Ended listings !");
-                Console.WriteLine("Displaying widget ...");
-                f.Categories.DoubleClick += new EventHandler((sender, e) => f.categories_DoubleClick(sender, e, conn));
-                f.Users.DoubleClick += new EventHandler((sender, e) => f.users_DoubleClick(sender, e, conn));
-                f.confirm.Click += new EventHandler((sender, e) => f.button1_Click(sender, e, conn));
-                f.Products.DoubleClick += new EventHandler((sender, e) => f.products_DoubleClick(sender, e, conn));
                 f.ShowDialog();
                 Console.WriteLine("Widget displayed !");
             }

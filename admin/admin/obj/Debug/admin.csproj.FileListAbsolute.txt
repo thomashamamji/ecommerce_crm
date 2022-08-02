@@ -66,3 +66,41 @@ C:/Users/thomashamamji/source/repos/ecommerce_crm/admin/admin/obj/Debug/admin.st
 /Volumes/Macintosh HD/Users/thomashamamji/sources/ecommerce_crm/admin/admin/bin/Debug/MySql.Data.xml
 /Volumes/Macintosh HD/Users/thomashamamji/sources/ecommerce_crm/admin/admin/obj/Debug/admin.csproj.AssemblyReference.cache
 /Volumes/Macintosh HD/Users/thomashamamji/sources/ecommerce_crm/admin/admin/obj/Debug/admin.exe.config
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.AssemblyReference.cache
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.SuggestedBindingRedirects.cache
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.exe.config
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.Dashboard.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.UserItem.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.ProductItem.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.adminLogin.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.status.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.GenerateResource.cache
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.CoreCompileInputs.cache
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.exe
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.pdb
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.exe.config
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.exe
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\admin.pdb
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\Google.Protobuf.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\MySql.Data.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Buffers.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Memory.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\Ubiety.Dns.Core.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\ZstdNet.dll
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Buffers.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\System.Memory.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\Google.Protobuf.pdb
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\Google.Protobuf.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\MySql.Data.xml
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.CopyComplete

@@ -20,14 +20,16 @@ namespace admin
             InitializeComponent();
         }
 
-        public class Session
+        public static class Session
         {
             public static int userId;
         }
 
+        public static int sessionId = -1;
+
         public void confirm_Click(object sender, EventArgs e, MySqlConnection connection)
         {
-            if (this.password.Text != "")
+            if (this.password.Text != "" && this.username.Text != "")
             {
                 // Call the db request to authenticate ...
                 MyUser table = new MyUser();
@@ -38,7 +40,10 @@ namespace admin
                 if (authenticated)
                 {
                     Session.userId = table.id;
+                    adminLogin.sessionId = table.id;
+                    this.success.Visible = true;
                     Console.WriteLine("Authenticated !");
+                    Console.WriteLine("user id : {0}", Session.userId);
                     Console.WriteLine("Closing login window ...");
                     this.Hide();
                     Console.WriteLine("Login window closed !");
@@ -72,8 +77,16 @@ namespace admin
                 else
                 {
                     Console.WriteLine("Authentication failed.");
+                    // Generate an error message
+                    // I make the error phrase visible
+                    this.failure.Visible = true;
                 }
             }
+        }
+
+        private void adminLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 
@@ -95,6 +108,8 @@ namespace admin
             if (val == true) return "1";
             else return "0";
         }
+
+        public static int sessionId = -1;
 
         public static bool StrIntToBool(string val)
         {

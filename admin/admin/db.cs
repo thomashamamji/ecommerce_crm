@@ -13,11 +13,11 @@ namespace admin_db
 	public class Status
     {
 		// For error handling
-		public static int NO_ERROR = 0;
-		public static int MISSING_FIELD = -1;
-		public static int DB_ERROR = -2;
-		public static int ACCESSS_DENIED = -3;
-		public static int NOT_FOUND = -4;
+		public const int NO_ERROR = 0;
+		public const int MISSING_FIELD = -1;
+		public const int DB_ERROR = -2;
+		public const int ACCESSS_DENIED = -3;
+		public const int NOT_FOUND = -4;
 
 		public static void PrintCodeContextError (int code) {
 			if (code >= Status.NO_ERROR) return;
@@ -28,7 +28,9 @@ namespace admin_db
 				case Status.DB_ERROR :
 					Console.WriteLine("An error occured during the database request.");
 				break;
-				default : Console.WriteLine("Error not known.");
+				default :
+					Console.WriteLine("Error not known.");
+				break;
 			}
 		}
 
@@ -427,28 +429,33 @@ namespace admin_db
 				return Status.MISSING_FIELD;
 			}
 
-			try {
-				// First, check if all ids are valid (users are found)
-				for (int id = 0; id < this.users.Length; id++) {
-					string sql = String.Format("select Id_utilisateur from utilisateur where Id_utilisateur='{0}'", this.users[id]);
-					MySqlCommand cmd = new MySqlCommand(sql, conn);
-					MySqlDataReader rdr = cmd.ExecuteReader();
-					if (rdr.Read() != true) {
-						Console.WriteLine(String.format("Id {0} not found.", this.users[id].ToString()));
-						return Status.NOT_FOUND;
-					}
-
-					else {
-						string query = String.format("update Utilisateur set vendeur={0} where Id_utilisateur={1}", this.permission, this.users[id].ToString());
+			else {
+				try
+				{
+					// First, check if all ids are valid (users are found)
+					for (int id = 0; id < this.users.Length; id++)
+					{
+						string sql = String.Format("select Id_utilisateur from utilisateur where Id_utilisateur='{0}'", this.users[id]);
 						MySqlCommand cmd = new MySqlCommand(sql, conn);
 						MySqlDataReader rdr = cmd.ExecuteReader();
+						if (rdr.Read() != true)
+						{
+							Console.WriteLine(String.Format("Id {0} not found.", this.users[id].ToString()));
+							return Status.NOT_FOUND;
+						}
 					}
-				}
-			}
 
-			catch (Exception ex) {
-				Console.WriteLine(ex.ToString());
-				return Status.DB_ERROR;
+					string query = String.Format("update Utilisateur set vendeur={0} where Id_utilisateur={1}", this.permission, this.users[id].ToString());
+					MySqlCommand command = new MySqlCommand(query, conn);
+					MySqlDataReader reader = command.ExecuteReader();
+					return Status.NO_ERROR;
+				}
+
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+					return Status.DB_ERROR;
+				}
 			}
 		}
 
@@ -482,7 +489,7 @@ namespace admin_db
 			}
 		}
 
-		public static void ListUsers(MySqlConnection conn)
+		public static int ListUsers(MySqlConnection conn)
 		{
 			try
 			{

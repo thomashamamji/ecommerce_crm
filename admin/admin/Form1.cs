@@ -102,7 +102,7 @@ namespace admin
         }
 
         // Events handling
-        public void products_MouseDoubleClick(object sender, MouseEventArgs e)
+        public void products_MouseDoubleClick(object sender, MouseEventArgs e, int sessionId)
         {
             int index = this.Products.IndexFromPoint(e.Location);
             if (index != System.Windows.Forms.ListBox.NoMatches)
