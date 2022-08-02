@@ -8,6 +8,8 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
+// Functions to check the tables to see if some unique fields already have the input value stored in the db or not
+
 namespace admin_db
 {
 	public class Status
@@ -18,6 +20,7 @@ namespace admin_db
 		public const int DB_ERROR = -2;
 		public const int ACCESSS_DENIED = -3;
 		public const int NOT_FOUND = -4;
+		public const int ALREADY_EXISTS = -5;
 
 		public static void PrintCodeContextError (int code) {
 			if (code >= Status.NO_ERROR) return;
@@ -58,25 +61,35 @@ namespace admin_db
 		public int id;
 		public string name;
 
+		public int Check(MySqlConnection conn) {
+			if (this.name == "") return Status.MISSING_FIELD;
+			try {
+				string sql = String.Format("select Id_category from categorie where nom='{0}'", this.name);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader(); ;
+				if (rdr.Read()) return Satus.ALREADY_EXISTS;
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex) {
+				return Status.DB_ERROR;
+			}
+		}
+
+		// Call Check() before inserting
 		public int Add(MySqlConnection conn)
 		{
 			try
 			{
-				if (this.name != "") {
-					Console.WriteLine("Trying to insert data (categorie) ...");
-					string sql = String.Format("insert into categorie(nom) values('{0}')", this.name);
-					MySqlCommand cmd = new MySqlCommand(sql, conn);
-					MySqlDataReader rdr = cmd.ExecuteReader();
-					rdr.Close();
-					Console.WriteLine("Added categorie successfully !");
-					return Status.NO_ERROR;
-				}
-
-				else
-				{
-					Console.WriteLine("Missing category name.");
-					return Status.MISSING_FIELD;
-				}
+				int st = this.Check(conn);
+				if (st < Status.NO_ERROR) return st;
+				Console.WriteLine("Trying to insert data (categorie) ...");
+				string sql = String.Format("insert into categorie(nom) values('{0}')", this.name);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Close();
+				Console.WriteLine("Added categorie successfully !");
+				return Status.NO_ERROR;
 			}
 
 			catch (Exception ex)
