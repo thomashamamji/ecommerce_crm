@@ -21,7 +21,7 @@
 
         if ($query->rowCount() > 0) {
             $user = $query->fetch(PDO::FETCH_ASSOC);
-            $validUser = $_POST["password"] == $user['password'];
+            $validUser = $_POST["password"] == $user['password'] && $_POST['acheteur'] == 1;
             if(!$validUser) $errorMsg = "Nom d'utilisateur ou mot de passe incorrecte";
             else {
                 $_SESSION["login"] = true;

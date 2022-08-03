@@ -27,7 +27,16 @@ insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateu
 insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Escalope de veau', 'Fine tranche de veau (300 g)', now(), 19.50, 2, 1);
 
 -- Légumes
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Salade', '300 g', now(), 1.0, 3, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Aubergines', '1 kg', now(), 2.0, 3, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Salade', '300 g', now(), 1.0, 3, 1);
 
 -- Sauces
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Ketchup', 'Sauce tomate', now(), 3.50, 4, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Mayonnaise', 'Sauce blanche', now(), 2.40, 4, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Barbecue', 'Sauce pour viandes', now(), 2.15, 4, 1);
 
 -- Épices
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Piment', 'Très piquant (100 g)', now(), 1.7, 2, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Safran', 'Épice rare de Iran (100 g)', now(), 60, 2, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Poivre', 'Récipient de 40 g', now(), 1, 2, 1);
