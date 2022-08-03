@@ -34,19 +34,23 @@
             // msg
             // 
             this.msg.AutoSize = true;
-            this.msg.Location = new System.Drawing.Point(368, 108);
+            this.msg.ForeColor = System.Drawing.Color.Green;
+            this.msg.Location = new System.Drawing.Point(491, 134);
+            this.msg.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.msg.Name = "msg";
-            this.msg.Size = new System.Drawing.Size(70, 25);
+            this.msg.Size = new System.Drawing.Size(122, 32);
             this.msg.TabIndex = 0;
-            this.msg.Text = "label1";
+            this.msg.Text = "Succès !";
+            this.msg.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.msg.Click += new System.EventHandler(this.label1_Click);
             // 
             // status
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 242);
+            this.ClientSize = new System.Drawing.Size(1123, 300);
             this.Controls.Add(this.msg);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "status";
             this.Text = "Form5";
             this.ResumeLayout(false);

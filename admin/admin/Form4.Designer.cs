@@ -32,8 +32,6 @@
             this.password = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.username = new System.Windows.Forms.TextBox();
-            this.failure = new System.Windows.Forms.Label();
-            this.success = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // confirm
@@ -72,35 +70,11 @@
             this.username.Size = new System.Drawing.Size(357, 38);
             this.username.TabIndex = 3;
             // 
-            // failure
-            // 
-            this.failure.AutoSize = true;
-            this.failure.ForeColor = System.Drawing.Color.Red;
-            this.failure.Location = new System.Drawing.Point(330, 505);
-            this.failure.Name = "failure";
-            this.failure.Size = new System.Drawing.Size(338, 32);
-            this.failure.TabIndex = 4;
-            this.failure.Text = "L\'autentification a échoué";
-            this.failure.Visible = false;
-            // 
-            // success
-            // 
-            this.success.AutoSize = true;
-            this.success.ForeColor = System.Drawing.Color.LimeGreen;
-            this.success.Location = new System.Drawing.Point(348, 505);
-            this.success.Name = "success";
-            this.success.Size = new System.Drawing.Size(320, 32);
-            this.success.TabIndex = 5;
-            this.success.Text = "L\'autentification a réussi";
-            this.success.Visible = false;
-            // 
             // adminLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1057, 625);
-            this.Controls.Add(this.success);
-            this.Controls.Add(this.failure);
             this.Controls.Add(this.username);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.password);
@@ -120,7 +94,5 @@
         public System.Windows.Forms.TextBox password;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.TextBox username;
-        private System.Windows.Forms.Label failure;
-        private System.Windows.Forms.Label success;
     }
 }

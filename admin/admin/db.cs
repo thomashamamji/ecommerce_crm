@@ -67,11 +67,12 @@ namespace admin_db
 				string sql = String.Format("select Id_category from categorie where nom='{0}'", this.name);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader(); ;
-				if (rdr.Read()) return Satus.ALREADY_EXISTS;
+				if (rdr.Read()) return Status.ALREADY_EXISTS;
 				return Status.NO_ERROR;
 			}
 
 			catch (Exception ex) {
+				Console.WriteLine(ex.Message);
 				return Status.DB_ERROR;
 			}
 		}
