@@ -41,7 +41,7 @@ namespace admin
                 Task.Delay(5000); // 5 seconds
             });
             t.Wait();
-            this.Hide();
+            this.Close();
         }
 
         public status()

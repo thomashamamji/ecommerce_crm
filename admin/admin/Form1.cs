@@ -37,7 +37,8 @@ namespace admin
                     table.price = Double.Parse(this.productPrice.Text); // That field needs to be written with a ',' not a '.' !!!
                     table.name = this.name.Text;
                     table.desc = this.productDescription.Text;
-                    table.Add(conn);
+                    int st = table.Add(conn);
+                    Status.HandleCode(st);
                     Console.WriteLine("Ended creating the product !");
                     // Show a success panel ...
                     // Refresh the displayed list
@@ -118,7 +119,8 @@ namespace admin
                 string cat_name = this.Categories.SelectedItem.ToString();
                 MyCategorie table = new MyCategorie();
                 table.name = cat_name;
-                table.Read(conn);
+                int st = table.Read(conn);
+                if (st < Status.NO_ERROR) Status.HandleCode(st);
                 // Display table.name and table.id values
             }
         }
@@ -165,8 +167,10 @@ namespace admin
                 Console.WriteLine("Selected {0} !", user_username);
                 MyUser table = new MyUser();
                 table.username = user_username;
-                table.Read(conn);
-                table.ReadId(conn);
+                int st = table.Read(conn);
+                if (st < Status.NO_ERROR) Status.HandleCode(st);
+                st = table.ReadId(conn);
+                if (st < Status.NO_ERROR) Status.HandleCode(st);
                 UserItem item = new UserItem();
                 item.firstname.Text = table.firstname;
                 item.lastname.Text = table.lastname;
@@ -175,8 +179,10 @@ namespace admin
                 Console.WriteLine("Got age !");
                 item.username.Text = table.username;
                 item.email.Text = table.email;
-                table.CountCategories(conn);
-                table.CountProducts(conn);
+                st = table.CountCategories(conn);
+                Status.PrintCodeContextError(st);
+                st = table.CountProducts(conn);
+                Status.PrintCodeContextError(st);
                 item.nbProducts.Text = table.nbProducts.ToString();
                 item.nbCategories.Text = table.nbCategories.ToString();
                 // Must count other tables for the rest
@@ -196,14 +202,16 @@ namespace admin
                 table.cat = new MyCategorie();
                 table.cat.id = -1; // To reset the id
                 table.name = product_name;
-                table.Read(conn);
+                int st = table.Read(conn);
+                if (st < Status.NO_ERROR) Status.HandleCode(st);
                 ProductItem item = new ProductItem();
                 item.productName.Text = table.name;
                 item.productAddedAt.Text = table.addedAt; // Get age from date of birth
                 item.productDescription.Text = table.desc;
                 item.productPrice.Text = table.price.ToString();
                 // table.CountSells(connection);
-                table.GetCategorie(conn);
+                st = table.GetCategorie(conn);
+                if (st < Status.NO_ERROR) Status.HandleCode(st);
                 item.productSells.Text = table.nbSells.ToString();
                 item.productCategorie.Text = table.cat.name.ToString();
                 // Must count other tables for the rest

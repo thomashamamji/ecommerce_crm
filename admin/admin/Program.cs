@@ -289,11 +289,6 @@ namespace Gestion_e_commerce
 
                 admin.Dashboard f = new admin.Dashboard();
 
-                // User needs to authenticate to continue ...
-
-                // Set fixed sizes to control form f
-
-                f.ShowDialog();
                 Console.WriteLine("Widget displayed !");
             }
 

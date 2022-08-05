@@ -29,9 +29,9 @@ namespace admin
 
         public void confirm_Click(object sender, EventArgs e, MySqlConnection connection)
         {
-            status Alert = new status();
             if (this.password.Text != "" && this.username.Text != "")
             {
+                int st; // status code of the operations
                 // Call the db request to authenticate ...
                 MyUser table = new MyUser();
                 // Setting credentials ...
@@ -44,8 +44,7 @@ namespace admin
                     adminLogin.sessionId = table.id;
                     Console.WriteLine("Authenticated !");
                     // Displaying the success
-                    Alert.msg.ForeColor = status.SUCCESS; // Add a field to indicate whethere the alert is a success or an error
-                    Alert.msg.Text = "Authentification réussie";
+                    Status.ShowMessage(true, "Authentification réussie");
                     Console.WriteLine("user id : {0}", Session.userId);
                     Console.WriteLine("Closing login window ...");
                     this.Hide();
@@ -81,8 +80,7 @@ namespace admin
                 {
                     Console.WriteLine("Authentication failed.");
                     // Generate an error message
-                    Alert.msg.ForeColor = status.ERROR;
-                    Alert.msg.Text = "Echec de la connexion";
+                    Status.ShowMessage(false, "Echec de la connexion");
                 }
             }
         }

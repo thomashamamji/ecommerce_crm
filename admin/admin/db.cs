@@ -6,7 +6,8 @@ using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Data;
 using MySql.Data.MySqlClient;
-using System.Windows.Forms;
+using System.Drawing;
+using System.Threading.Tasks;
 
 // Functions to check the tables to see if some unique fields already have the input value stored in the db or not
 
@@ -22,10 +23,14 @@ namespace admin_db
 		public const int NOT_FOUND = -4;
 		public const int ALREADY_EXISTS = -5;
 
+		// Alert colors
+		public static Color SUCCESS = Color.FromArgb(0, 190, 0);
+		public static Color ERROR = Color.FromArgb(190, 0, 0);
+
 		public static void PrintCodeContextError (int code) {
 			if (code >= Status.NO_ERROR) return;
 			switch (code) {
-				case Status.MISSING_FIELD :
+				case Status.MISSING_FIELD:
 					Console.WriteLine("Missing some fields.");
 				break;
 				case Status.DB_ERROR :
@@ -37,6 +42,39 @@ namespace admin_db
 			}
 		}
 
+		public static void DisplayError (int code)
+        {
+			if (code >= Status.NO_ERROR) Status.ShowMessage(true, "Opération réussie.");
+			else
+            {
+				switch (code)
+                {
+					case Status.MISSING_FIELD:
+						Status.ShowMessage(false, "Des informations sont manquantes. Assurez vous de remplir tous les champs requis du formulaire.");
+					break;
+					case Status.DB_ERROR:
+						Status.ShowMessage(false, "Une erreur interne est survenue dans le programme.");
+					break;
+					case Status.ACCESSS_DENIED:
+						Status.ShowMessage(false, "Vous n'avez pas l'autorisation de réaliser cette opération.");
+					break;
+					case Status.NOT_FOUND:
+						Status.ShowMessage(false, "Elément non trouvé.");
+					break;
+					case Status.ALREADY_EXISTS:
+						Status.ShowMessage(false, "L'élément que vous souhaitez ajouter existe déjà.");
+					break;
+					default: break;
+				}
+            }
+		}
+
+		public static void HandleCode(int code)
+        {
+			Status.PrintCodeContextError(code);
+			Status.DisplayError(code);
+        }
+
 		// Only presentable texts for these functions
 
 		public static void PrintSuccess(string txt)
@@ -46,6 +84,38 @@ namespace admin_db
 			f.ShowDialog();
 			f.Close();
         }
+
+		public static void ShowMessage(bool success, string message)
+		{
+			admin.status f = new admin.status();
+			// Setting the color
+			if (success) f.msg.ForeColor = Status.SUCCESS;
+			else f.msg.ForeColor = Status.ERROR;
+
+			// Setting the message
+			if (message == "")
+			{
+				if (success) f.msg.Text = "Réussite !";
+				else f.msg.Text = "Echec ! ";
+			}
+			else
+			{
+				f.msg.Text = message;
+			}
+
+			f.Show();
+
+			// Triggering the delay
+			/*Task t = Task.Run(() => {
+				Console.WriteLine("Showing message ...");
+				f.Show();
+				// Add the delay here
+				Task.Delay(5000); // 5 seconds
+			});
+			t.Wait();
+			Console.WriteLine("Close message window.");
+			f.Close();*/
+		}
 
 		public static void PrintError(string txt)
         {
@@ -291,9 +361,10 @@ namespace admin_db
 				try {
 					string sql = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', CURRENT_DATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
+					Console.WriteLine("Execution query '{0}' ...", sql);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					rdr.Close();
-					Status.PrintSuccess("Le produit a été ajouté avec succès !");
+					Status.ShowMessage(true, "Le produit a été ajouté avec succès !");
 					return Status.NO_ERROR;
 				}
 
