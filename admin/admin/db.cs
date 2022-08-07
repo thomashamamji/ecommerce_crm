@@ -357,27 +357,21 @@ namespace admin_db
 
 		public int Add(MySqlConnection conn)
 		{
-            if (this.name != "") {
-				try {
-					string sql = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', CURRENT_DATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
-					MySqlCommand cmd = new MySqlCommand(sql, conn);
-					Console.WriteLine("Execution query '{0}' ...", sql);
-					MySqlDataReader rdr = cmd.ExecuteReader();
-					rdr.Close();
-					Status.ShowMessage(true, "Le produit a été ajouté avec succès !");
-					return Status.NO_ERROR;
-				}
-
-				catch (Exception ex) {
-					Console.WriteLine(ex);
-					return Status.DB_ERROR;
-				}
+			int st = this.Check(conn);
+			if (st < Status.NO_ERROR) return st;
+			try {
+				string sql = String.Format("insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values('{0}', '{1}', CURRENT_DATE(), {2}, {3}, {4})", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.cat.id, this.userId);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				Console.WriteLine("Execution query '{0}' ...", sql);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Close();
+				Status.ShowMessage(true, "Le produit a été ajouté avec succès !");
+				return Status.NO_ERROR;
 			}
 
-			else
-            {
-				Status.PrintError("Une erreur est survenue dans le programme :(");
-				return Status.MISSING_FIELD;
+			catch (Exception ex) {
+				Console.WriteLine(ex);
+				return Status.DB_ERROR;
 			}
 		}
 
@@ -457,6 +451,25 @@ namespace admin_db
 
 			catch (Exception ex) {
 				Console.WriteLine(ex.ToString());
+				return Status.DB_ERROR;
+			}
+		}
+
+		public int Check(MySqlConnection conn)
+		{
+			if (this.name == "" || this.price < 0 || this.cat.name == "") return Status.MISSING_FIELD;
+			try
+			{
+				string sql = String.Format("select Id_produit from produit where nom='{0}'", this.name);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader(); ;
+				if (rdr.Read()) return Status.ALREADY_EXISTS;
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
 				return Status.DB_ERROR;
 			}
 		}

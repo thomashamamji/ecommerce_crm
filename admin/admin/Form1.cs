@@ -19,6 +19,7 @@ namespace admin
         public Dashboard()
         {
             InitializeComponent();
+            this.Size = new Size(int.MaxValue, int.MaxValue);
         }
 
         public void button1_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)

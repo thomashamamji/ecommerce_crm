@@ -269,14 +269,13 @@ namespace Gestion_e_commerce
             Console.WriteLine("Manage ecommerce website");
             try
             {
-                Console.WriteLine("Opening login form ...");
-
                 // Database auth
-                string DB_HOST = "192.168.1.102";
+                string DB_HOST = "192.168.1.103";
                 string DB_USER = "ecommerce_admin_app_dbuser";
                 string DB_PASS = "app12345$$$$$";
                 string DB_NAME = "ecommerce_admin_app_db";
                 string connStr = String.Format("server={0};userid={1};password={2};database={3}", DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                Console.WriteLine("Opening login form (connection:{0}) ...", connStr);
                 MySqlConnection conn = new MySqlConnection(connStr);
 
                 // Now starting the body of the program
