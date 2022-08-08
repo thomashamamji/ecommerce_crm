@@ -396,6 +396,33 @@ namespace admin_db
 				return Status.DB_ERROR;
 			}
 		}
+
+		public int GetSells(MySqlConnection conn)
+        {
+			if (this.id == -1)
+            {
+				Console.WriteLine("Missing the category id.");
+				return Status.MISSING_FIELD;
+            }
+
+			try
+            {
+				string sql = String.Format("select p.Id_produit from vente as v join produit as p on (p.Id_produit=v.Id_produit) join categorie as c on (c.Id_categorie=p.Id_categorie) where c.Id_categorie={0}", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Read();
+				this.sellsNb = Int32.Parse(rdr.GetValue(rdr.GetOrdinal("pseudo")).ToString());
+				rdr.Close();
+				Console.WriteLine("{0} sells for that category.", this.sellsNb);
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex);
+				return Status.MISSING_FIELD;
+            }
+        }
 	}
 
 	public class MyProduct
