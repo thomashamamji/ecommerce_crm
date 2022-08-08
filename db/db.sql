@@ -18,6 +18,7 @@ create table if not exists utilisateur(
 create table if not exists categorie(
     Id_categorie int auto_increment,
     nom varchar(100),
+    addedAt datetime,
     Id_utilisateur int,
     foreign key (Id_utilisateur) references utilisateur(Id_utilisateur),
     primary key(Id_categorie)
@@ -40,6 +41,7 @@ create table if not exists vente(
     Id_vente int auto_increment,
     Id_produit int,
     Id_utilisateur int,
+    quantite int,
     foreign key (Id_produit) references produit(Id_produit),
     foreign key (Id_utilisateur) references utilisateur(Id_utilisateur),
     primary key (Id_vente)
