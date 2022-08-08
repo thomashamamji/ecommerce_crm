@@ -130,10 +130,18 @@ namespace admin_db
 	{
 		public int id;
 		public string name;
+		public int productsNb;
+		public int sellsNb;
+		public string createdBy; // username
+		public string createdAt; // String format(dd/mm/yyyy)
 
 		public MyCategorie () {
 			this.id = -1;
 			this.name = "";
+			this.productsNb = 0;
+			this.sellsNb = 0;
+			this.createdBy = "";
+			this.createdAt = "";
 		}
 
 		public MyCategorie (int id, string name) {
@@ -166,6 +174,7 @@ namespace admin_db
 			try {
 				Console.WriteLine("Reading category's products ...");
 				string sql = String.Format("select Id_produit,nom, description, price, addedAt from Produit where Id_categorie = '{0}'", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
 				while (rdr.Read())
 				{
@@ -174,6 +183,7 @@ namespace admin_db
 					// ...
 				}
 				rdr.Close();
+				return Status.NO_ERROR;
 			}
 
 			catch (Exception ex)
@@ -334,6 +344,58 @@ namespace admin_db
 				return Status.DB_ERROR;
 			}
 		}
+
+		// products, createdBy
+
+		public int GetProducts (MySqlConnection conn)
+        {
+			if (this.id == -1)
+            {
+				return Status.NO_ERROR;
+            }
+			try
+            {
+				string sql = String.Format("select count(p.Id_produit) as productsNb from categorie as c join produit as p on (p.Id_categorie=c.Id_categorie) where c.Id_categorie={0}", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Read();
+				this.productsNb = Int32.Parse(rdr.GetValue(rdr.GetOrdinal("productsNb")).ToString());
+				rdr.Close();
+				Console.WriteLine("{0} products in that category.", this.productsNb);
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex)
+            {
+				Console.WriteLine("An error occured while counting the category's products : ", ex.Message);
+				return Status.DB_ERROR;
+            }
+        }
+
+		public int GetUser(MySqlConnection conn)
+		{
+			if (this.id == -1)
+			{
+				return Status.NO_ERROR;
+			}
+			try
+			{
+				string sql = String.Format("select u.pseudo from categorie as c join utilisateur as u on (u.Id_utilisateur=c.Id_utilisateur) where c.Id_categorie={0}", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Read();
+				this.createdBy = rdr.GetValue(rdr.GetOrdinal("pseudo")).ToString();
+				rdr.Close();
+				Console.WriteLine("User '{0}' read successfully", this.createdBy);
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine("An error occured while getting the category's user : ", ex.Message);
+				return Status.DB_ERROR;
+			}
+		}
 	}
 
 	public class MyProduct
@@ -353,6 +415,7 @@ namespace admin_db
 			this.name = "";
 			this.desc = "";
 			this.addedAt = "";
+			this.cat = new MyCategorie();
 			this.cat.id = -1;
 			this.cat.name = "";
 			this.nbSells = 0;
@@ -551,11 +614,12 @@ namespace admin_db
 			this.firstname = "";
 			this.lastname = "";
 			this.username = "";
-			this.seller = null;
-			this.buger = null;
+			// May change it to int type
+			this.seller = false;
+			this.buyer = false;
 			this.nbProducts = 0;
 			this.nbCategories = 0;
-			this.users = [];
+			this.users = new Int32[50];
 			this.permission = -1;
 		}
 
@@ -822,7 +886,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Trying to count categories ...");
-					string sql = String.Format("select count(c.Id_categorie) as nbCategories from categorie as c join produit as p on (p.Id_categorie=c.Id_categorie) join utilisateur as u on (p.Id_utilisateur=u.Id_utilisateur) where u.Id_utilisateur={0}", this.id); // Updated (needs tests)
+					string sql = String.Format("select count(c.Id_categorie) as nbCategories from utilisateur as u join categorie as c on (c.Id_utilisateur=u.Id_utilisateur) where u.Id_utilisateur={0}", this.id); // Updated (needs tests)
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					while (rdr.Read())

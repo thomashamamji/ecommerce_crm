@@ -32,7 +32,6 @@ namespace admin
                     Console.WriteLine("Trying to create a new product ...");
                     MyProduct table = new MyProduct();
                     table.userId = sessionId; // Will change later with the user auth
-                    table.cat = new MyCategorie();
                     table.cat.name = this.productCategorie.Text; // User has to choose a categorie
                     table.cat.ReadId(conn);
                     table.price = Double.Parse(this.productPrice.Text); // That field needs to be written with a ',' not a '.' !!!
@@ -121,8 +120,35 @@ namespace admin
                 MyCategorie table = new MyCategorie();
                 table.name = cat_name;
                 int st = table.Read(conn);
-                if (st < Status.NO_ERROR) Status.HandleCode(st);
-                // Display table.name and table.id values
+                if (st < Status.NO_ERROR)
+                {
+                    Status.HandleCode(st);
+                    return;
+                }
+
+                st = table.GetProducts(conn);
+                if (st < Status.NO_ERROR)
+                {
+                    Status.HandleCode(st);
+                    return;
+                }
+
+                st = table.GetUser(conn);
+                if (st < Status.NO_ERROR)
+                {
+                    Status.HandleCode(st);
+                    return;
+                }
+                
+                // Display table fields
+                // I will add an addedAt field which is missing
+                CategoryItem category = new CategoryItem();
+                category.name.Text = table.name;
+                category.products.Text = table.productsNb.ToString();
+                category.sells.Text = table.sellsNb.ToString();
+                category.createdBy.Text = table.createdBy;
+                category.createdAt.Text = table.createdAt;
+                category.Show();
             }
         }
 
@@ -187,8 +213,9 @@ namespace admin
                 item.nbProducts.Text = table.nbProducts.ToString();
                 item.nbCategories.Text = table.nbCategories.ToString();
                 // Must count other tables for the rest
-                item.nbSells.Text = "10";
-                item.nbPurchases.Text = "5";
+                // Will be set when i create the needed table
+                item.nbSells.Text = "0";
+                item.nbPurchases.Text = "0";
                 item.ShowDialog();
             }
         }
@@ -200,8 +227,6 @@ namespace admin
                 string product_name = this.Products.SelectedItem.ToString();
                 Console.WriteLine("Selected {0} !", product_name);
                 MyProduct table = new MyProduct();
-                table.cat = new MyCategorie();
-                table.cat.id = -1; // To reset the id
                 table.name = product_name;
                 int st = table.Read(conn);
                 if (st < Status.NO_ERROR) Status.HandleCode(st);

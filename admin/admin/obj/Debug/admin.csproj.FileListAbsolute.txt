@@ -104,4 +104,4 @@ C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Hash.xxHash
 C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\K4os.Compression.LZ4.Streams.xml
 C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\bin\Debug\MySql.Data.xml
 C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.csproj.CopyComplete
-C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.Form6.resources
+C:\Users\thoma\source\repos\ecommerce_crm\admin\admin\obj\Debug\admin.CategoryItem.resources

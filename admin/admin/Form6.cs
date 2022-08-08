@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace admin
 {
-    public partial class Form6 : Form
+    public partial class CategoryItem : Form
     {
-        public Form6()
+        public CategoryItem()
         {
             InitializeComponent();
+        }
+
+        private void name_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
