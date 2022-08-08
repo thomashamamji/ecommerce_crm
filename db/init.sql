@@ -3,11 +3,11 @@ insert into utilisateur(pseudo, password, prenom, nom, email, naissance, vendeur
 -- Fill the database with a list of categories and products
 
 -- Categories
-insert into categorie(nom) values('Fruit');
-insert into categorie(nom) values('Viandes');
-insert into categorie(nom) values('Légumes');
-insert into categorie(nom) values('Sauces');
-insert into categorie(nom) values('Épices');
+insert into categorie(nom, Id_utilisateur) values('Fruit', 1);
+insert into categorie(nom, Id_utilisateur) values('Viande', 1);
+insert into categorie(nom, Id_utilisateur) values('Légume', 1);
+insert into categorie(nom, Id_utilisateur) values('Sauce', 1);
+insert into categorie(nom, Id_utilisateur) values('Épice', 1);
 
 -- Products
 -- Fruits
@@ -37,6 +37,6 @@ insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateu
 insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Barbecue', 'Sauce pour viandes', now(), 2.15, 4, 1);
 
 -- Épices
-insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Piment', 'Très piquant (100 g)', now(), 1.7, 2, 1);
-insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Safran', 'Épice rare de Iran (100 g)', now(), 60, 2, 1);
-insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Poivre', 'Récipient de 40 g', now(), 1, 2, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Piment', 'Très piquant (100 g)', now(), 1.7, 5, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Safran', 'Épice rare de Iran (100 g)', now(), 60, 5, 1);
+insert into produit(nom, description, addedAt, prix, Id_categorie, Id_utilisateur) values ('Poivre', 'Récipient de 40 g', now(), 1, 5, 1);

@@ -1,11 +1,5 @@
 -- Run it after initing the database
 
-create table if not exists categorie(
-    Id_categorie int auto_increment,
-    nom varchar(100),
-    primary key(Id_categorie)
-);
-
 create table if not exists utilisateur(
     Id_utilisateur int auto_increment,
     pseudo varchar(255),
@@ -21,6 +15,14 @@ create table if not exists utilisateur(
     primary key(Id_utilisateur)
 );
 
+create table if not exists categorie(
+    Id_categorie int auto_increment,
+    nom varchar(100),
+    Id_utilisateur int,
+    foreign key (Id_utilisateur) references utilisateur(Id_utilisateur),
+    primary key(Id_categorie)
+);
+
 create table if not exists produit(
     Id_produit int auto_increment,
     nom varchar(100),
@@ -33,3 +35,12 @@ create table if not exists produit(
     foreign key (Id_utilisateur) references utilisateur(Id_utilisateur),
     primary key(Id_produit)
 );
+
+create table if not exists vente(
+    Id_vente int auto_increment,
+    Id_produit int,
+    Id_utilisateur int,
+    foreign key (Id_produit) references produit(Id_produit),
+    foreign key (Id_utilisateur) references utilisateur(Id_utilisateur),
+    primary key (Id_vente)
+)
