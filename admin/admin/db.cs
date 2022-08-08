@@ -131,6 +131,16 @@ namespace admin_db
 		public int id;
 		public string name;
 
+		public MyCategorie () {
+			this.id = -1;
+			this.name = "";
+		}
+
+		public MyCategorie (int id, string name) {
+			this.id = id;
+			this.name = name;
+		}
+
 		public int Check(MySqlConnection conn) {
 			if (this.name == "") return Status.MISSING_FIELD;
 			try {
@@ -143,6 +153,32 @@ namespace admin_db
 
 			catch (Exception ex) {
 				Console.WriteLine(ex.Message);
+				return Status.DB_ERROR;
+			}
+		}
+
+		public int ListProducts (MySqlConnection conn) {
+			if (this.id == -1) {
+				Console.WriteLine("No category.");
+				return Status.MISSING_FIELD;
+			}
+
+			try {
+				Console.WriteLine("Reading category's products ...");
+				string sql = String.Format("select Id_produit,nom, description, price, addedAt from Produit where Id_categorie = '{0}'", this.id);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				while (rdr.Read())
+				{
+					Console.WriteLine(rdr["Id_produit"] + " -- " + rdr["nom"]);
+					// Display the product on the screen from that function
+					// ...
+				}
+				rdr.Close();
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
 				return Status.DB_ERROR;
 			}
 		}
@@ -174,12 +210,16 @@ namespace admin_db
 		{
 			try
             {
-				if (this.name != "")
+				if (this.id != -1)
                 {
 					Console.WriteLine("Trying to delete categorie ...");
-					string sql = String.Format("delete from categorie where nom='{0}'", this.name);
+					string sql = String.Format("delete from produit where Id_categorie={0}", this.id);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
+					rdr.Close();
+					sql = String.Format("delete from categorie where Id_categorie={0}", this.id);
+					cmd = new MySqlCommand(sql, conn);
+					rdr = cmd.ExecuteReader();
 					rdr.Close();
 					Console.WriteLine("Deleted categorie successfully !");
 					return Status.NO_ERROR;
@@ -306,6 +346,17 @@ namespace admin_db
 		public double price;
 		public MyCategorie cat;
 		public int nbSells;
+
+		public MyProduct () {
+			this.id = -1;
+			this.userId = -1;
+			this.name = "";
+			this.desc = "";
+			this.addedAt = "";
+			this.cat.id = -1;
+			this.cat.name = "";
+			this.nbSells = 0;
+		}
 
 		public string ToPointStr(string str)
 		{
@@ -492,6 +543,22 @@ namespace admin_db
 		public int[] users; // Id(s) to make operations to user(s)
 		public int permission;
 
+		public MyUser() {
+			this.id = -1;
+			this.email = "";
+			this.password = "";
+			this.bornAt = "";
+			this.firstname = "";
+			this.lastname = "";
+			this.username = "";
+			this.seller = null;
+			this.buger = null;
+			this.nbProducts = 0;
+			this.nbCategories = 0;
+			this.users = [];
+			this.permission = -1;
+		}
+
 		// No error code for this one (but may change later)
 		public bool AuthenticateAdmin(MySqlConnection conn)
         {
@@ -520,6 +587,8 @@ namespace admin_db
             }
         }
 
+		// Write a function to add a user id from the selected user(s) of the users list displayed on the window.
+
 		// New
 		public int GrantPermissionsAsAdmin (MySqlConnection conn) {
 			if (this.users.Length == 0 || this.permission == -1) {
@@ -543,7 +612,7 @@ namespace admin_db
 						}
 					}
 
-					string query = String.Format("update Utilisateur set vendeur={0} where Id_utilisateur={1}", this.permission, this.users[id].ToString());
+					string query = String.Format("update utilisateur set vendeur={0} where Id_utilisateur={1}", this.permission, this.users[id].ToString());
 					MySqlCommand command = new MySqlCommand(query, conn);
 					MySqlDataReader reader = command.ExecuteReader();
 					return Status.NO_ERROR;
@@ -685,7 +754,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Deleting user ...");
-					string sql = String.Format("delete from Utilisateur(email) values ('{0}')", this.email);
+					string sql = String.Format("delete from utilisateur(pseudo) values ('{0}')", this.username);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					rdr.Close();
@@ -745,6 +814,7 @@ namespace admin_db
             }
 		}
 
+		// Value displayed at the top of the categories list
 		public int CountCategories(MySqlConnection conn)
 		{
 			if (this.id != -1)
@@ -752,7 +822,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Trying to count categories ...");
-					string sql = String.Format("select count(Id_categorie) as nbCategories from categorie join utilisateur on (categorie.Id_utilisateur=utilisateur.Id_utilisateur) where utilisateur.Id_utilisateur={0};", this.id);
+					string sql = String.Format("select count(c.Id_categorie) as nbCategories from categorie as c join produit as p on (p.Id_categorie=c.Id_categorie) join utilisateur as u on (p.Id_utilisateur=u.Id_utilisateur) where u.Id_utilisateur={0}", this.id); // Updated (needs tests)
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					while (rdr.Read())
@@ -790,7 +860,7 @@ namespace admin_db
 				try
                 {
 					Console.WriteLine("Trying to count products ...");
-					string sql = String.Format("select count(Id_produit) as nbProduits from produit join utilisateur on (produit.Id_utilisateur=utilisateur.Id_utilisateur) where utilisateur.Id_utilisateur={0};", this.id);
+					string sql = String.Format("select count(p.Id_produit) as nbProduits from produit as p join utilisateur as u on (p.Id_utilisateur=u.Id_utilisateur) where u.Id_utilisateur={0}", this.id);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					while (rdr.Read())
