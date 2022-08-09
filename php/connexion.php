@@ -1,9 +1,10 @@
 <?php
     session_start();
     $errorMsg = "";
-    $id_field = 0;
+    // $id_field = 0;
     $username_field = $password_field = "";
-    $validUser = $_SESSION["login"] === true;
+    $validUser = false;
+    if (isset($_SESSION['login'])) $_SESSION["login"] === true;
     $password_field = "";
 
     if ($validUser) header('Location: /ecommerce/index.php');
@@ -13,7 +14,6 @@
     $errorMsg = "";
 
     if (isset($_POST['sub']) && isset($_POST['password'])) {
-        echo $_POST['username'] . ":" . $_POST['password'];
         $query = $conn->prepare("SELECT * FROM utilisateur WHERE pseudo=:username AND password=:password");
         $query->bindValue("username", $_POST['username'], PDO::PARAM_STR);
         $query->bindValue("password", $_POST['password'], PDO::PARAM_STR);
@@ -21,11 +21,11 @@
 
         if ($query->rowCount() > 0) {
             $user = $query->fetch(PDO::FETCH_ASSOC);
-            $validUser = $_POST["password"] == $user['password'] && $_POST['acheteur'] == 1;
+            $validUser = $_POST["password"] == $user['password'] && $user['acheteur'] == 1;
             if(!$validUser) $errorMsg = "Nom d'utilisateur ou mot de passe incorrecte";
             else {
                 $_SESSION["login"] = true;
-                $_SESSION["user_id"] = $id_field;
+                $_SESSION["user_id"] = $user['Id_utilisateur'];
                 header("Location: /ecommerce/index.php"); die();
             }
         }
