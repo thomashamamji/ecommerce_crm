@@ -1,4 +1,4 @@
-insert into utilisateur(pseudo, password, prenom, nom, email, naissance, vendeur, acheteur, createdAt, updatedAt) values ('admin', 'abcabcabc', 'Thomas', 'Hamamji', 'thomas.hamamji@gmail.com', '2000-05-29', 1, 0, now(), now());
+insert into utilisateur(pseudo, password, prenom, nom, email, naissance, vendeur, acheteur, createdAt, updatedAt) values ('admin', 'abcabcabc', 'Thomas', 'Hamamji', 'thomas.hamamji@gmail.com', '2000-05-29', 1, 1, now(), now());
 
 -- Fill the database with a list of categories and products
 
