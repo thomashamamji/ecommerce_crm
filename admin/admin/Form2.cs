@@ -15,6 +15,7 @@ namespace admin
         public UserItem()
         {
             InitializeComponent();
+            this.Size = new Size(this.Size.Width, this.Size.Height+100);
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

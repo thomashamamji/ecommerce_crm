@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace admin
 {
@@ -17,19 +18,12 @@ namespace admin
             InitializeComponent();
         }
 
-        private void label4_Click(object sender, EventArgs e)
+        public void edit_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
+            admin.Form7 edit = new admin.Form7();
+            edit.ShowDialog();
 
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
+            // Here handle the click event of the edit confirm button
         }
     }
 }

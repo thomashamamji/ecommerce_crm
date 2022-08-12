@@ -36,6 +36,15 @@ namespace admin_db
 				case Status.DB_ERROR :
 					Console.WriteLine("An error occured during the database request.");
 				break;
+				case Status.ACCESSS_DENIED :
+					Console.WriteLine("You dont have access to that ressource.");
+				break;
+				case Status.NOT_FOUND :
+					Console.WriteLine("Element not found from database.");
+				break;
+				case Status.ALREADY_EXISTS:
+					Console.WriteLine("Element already exists in database.");
+				break;
 				default :
 					Console.WriteLine("Error not known.");
 				break;
@@ -632,6 +641,7 @@ namespace admin_db
 		public int nbCategories;
 		public int[] users; // Id(s) to make operations to user(s)
 		public int permission;
+		public int nPurchases;
 
 		public MyUser() {
 			this.id = -1;
@@ -648,6 +658,7 @@ namespace admin_db
 			this.nbCategories = 0;
 			this.users = new Int32[50];
 			this.permission = -1;
+			this.nPurchases = 0;
 		}
 
 		// No error code for this one (but may change later)
@@ -661,11 +672,16 @@ namespace admin_db
             try
             {
 				Console.WriteLine("Trying to authenticate as admin ...");
-				string sql = String.Format("select Id_utilisateur from utilisateur where pseudo='{0}' and password='{1}'", this.username, this.password);
+				string sql = String.Format("select Id_utilisateur, vendeur, acheteur from utilisateur where pseudo='{0}' and password='{1}'", this.username, this.password);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				bool ret = rdr.Read() == true;
-				if (ret) this.id = Int32.Parse(rdr["Id_utilisateur"].ToString());
+				bool ret = rdr.Read() == true && MyUser.StrIntToBool(rdr["vendeur"].ToString());
+				if (ret)
+				{
+					this.id = Int32.Parse(rdr["Id_utilisateur"].ToString());
+					this.seller = true;
+					this.buyer = MyUser.StrIntToBool(rdr["acheteur"].ToString());
+				}
 				Console.WriteLine("End of authentication !");
 				rdr.Close();
 				return true;
@@ -889,6 +905,8 @@ namespace admin_db
 					this.bornAt = rdr["naissance"].ToString();
 					this.username = rdr["pseudo"].ToString();
 					this.email = rdr["email"].ToString();
+					this.buyer = MyUser.StrIntToBool(rdr["acheteur"].ToString());
+					this.seller = MyUser.StrIntToBool(rdr["vendeur"].ToString());
 				}
 
 				rdr.Close();
@@ -980,6 +998,40 @@ namespace admin_db
 				Console.WriteLine("Missing some fields.");
 				return Status.MISSING_FIELD;
             }
+		}
+
+		public int GetPurchases(MySqlConnection conn)
+        {
+			if (this.id == -1) return Status.MISSING_FIELD;
+			if (!this.buyer) return Status.ACCESSS_DENIED;
+			try
+            {
+				string sql = String.Format("select count(Id_vente) as nPurchases from vente where Id_utilisateur = {0}", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				while (rdr.Read())
+				{
+					// Takes the last and unique row
+					this.nPurchases = Int32.Parse(rdr["nPurchases"].ToString());
+				}
+
+				rdr.Close();
+				return Status.NO_ERROR;
+            }
+
+			catch (Exception ex)
+            {
+				Console.WriteLine(ex.ToString());
+				return Status.DB_ERROR;
+            }
+        }
+
+		public string ShowRole()
+		{
+			if (this.buyer && this.seller) return "Acheteur et vendeur";
+			else if (this.buyer) return "Acheteur";
+			else return "Vendeur";
+
 		}
 	}
 }

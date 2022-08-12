@@ -210,12 +210,14 @@ namespace admin
                 Status.PrintCodeContextError(st);
                 st = table.CountProducts(conn);
                 Status.PrintCodeContextError(st);
+                st = table.GetPurchases(conn);
+                Status.PrintCodeContextError(st);
+                if (st == Status.NO_ERROR) item.nbPurchases.Text = table.nPurchases.ToString();
                 item.nbProducts.Text = table.nbProducts.ToString();
                 item.nbCategories.Text = table.nbCategories.ToString();
+                item.role.Text = table.ShowRole();
                 // Must count other tables for the rest
                 // Will be set when i create the needed table
-                item.nbSells.Text = "0";
-                item.nbPurchases.Text = "0";
                 item.ShowDialog();
             }
         }
@@ -242,6 +244,9 @@ namespace admin
                 item.productCategorie.Text = table.cat.name.ToString();
                 // Must count other tables for the rest
                 item.ShowDialog();
+
+                // Handling event here
+                item.edit.Click += new EventHandler((s, ev) => item.edit_Click(s, ev, conn, sessionId));
             }
         }
 

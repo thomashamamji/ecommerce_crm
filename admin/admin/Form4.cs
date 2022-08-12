@@ -31,7 +31,6 @@ namespace admin
         {
             if (this.password.Text != "" && this.username.Text != "")
             {
-                int st; // status code of the operations
                 // Call the db request to authenticate ...
                 MyUser table = new MyUser();
                 // Setting credentials ...
