@@ -157,6 +157,24 @@ namespace admin_db
 			this.id = id;
 			this.name = name;
 		}
+		public static bool FindName(MySqlConnection conn, string name)
+        {
+			if (name == "") return false;
+			try
+			{
+				string sql = String.Format("select Id_category from categorie where nom='{0}'", name);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader(); ;
+				if (rdr.Read()) return true;
+				return false;
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return false;
+            }
+        }
 
 		public int Check(MySqlConnection conn) {
 			if (this.name == "") return Status.MISSING_FIELD;

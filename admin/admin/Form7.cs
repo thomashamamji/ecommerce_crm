@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using admin_db;
 
 namespace admin
 {
@@ -17,19 +19,17 @@ namespace admin
             InitializeComponent();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        public void confirm_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
         {
-
-        }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void confirm_Click(object sender, EventArgs e)
-        {
-
+            MyProduct product = new MyProduct();
+            // Check if the new values are correct
+            bool categoryNameExists = MyCategorie.FindName(conn, this.category.Text);
+            if (!categoryNameExists)
+            {
+                // We can edit table with new data
+                int st = product.Edit(conn);
+                Status.HandleCode(st);
+            }
         }
     }
 }

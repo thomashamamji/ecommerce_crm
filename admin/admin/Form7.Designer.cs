@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TextBox description;
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.price = new System.Windows.Forms.TextBox();
             this.category = new System.Windows.Forms.TextBox();
             this.confirm = new System.Windows.Forms.Button();
-            description = new System.Windows.Forms.TextBox();
+            this.description = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label10
@@ -48,7 +47,6 @@
             this.label10.Size = new System.Drawing.Size(141, 31);
             this.label10.TabIndex = 18;
             this.label10.Text = "Catégorie";
-            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // label11
             // 
@@ -79,7 +77,6 @@
             this.price.Name = "price";
             this.price.Size = new System.Drawing.Size(357, 38);
             this.price.TabIndex = 22;
-            this.price.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // category
             // 
@@ -88,14 +85,6 @@
             this.category.Name = "category";
             this.category.Size = new System.Drawing.Size(357, 38);
             this.category.TabIndex = 24;
-            // 
-            // description
-            // 
-            description.Location = new System.Drawing.Point(472, 333);
-            description.Margin = new System.Windows.Forms.Padding(4);
-            description.Name = "description";
-            description.Size = new System.Drawing.Size(357, 38);
-            description.TabIndex = 25;
             // 
             // confirm
             // 
@@ -106,15 +95,23 @@
             this.confirm.TabIndex = 26;
             this.confirm.Text = "Appliquer";
             this.confirm.UseVisualStyleBackColor = true;
-            this.confirm.Click += new System.EventHandler(this.confirm_Click);
+
+            // 
+            // description
+            // 
+            this.description.Location = new System.Drawing.Point(472, 333);
+            this.description.Margin = new System.Windows.Forms.Padding(4);
+            this.description.Name = "description";
+            this.description.Size = new System.Drawing.Size(357, 38);
+            this.description.TabIndex = 27;
             // 
             // Form7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1095, 673);
+            this.Controls.Add(this.description);
             this.Controls.Add(this.confirm);
-            this.Controls.Add(description);
             this.Controls.Add(this.category);
             this.Controls.Add(this.price);
             this.Controls.Add(this.label10);
@@ -134,5 +131,6 @@
         public System.Windows.Forms.TextBox price;
         public System.Windows.Forms.TextBox category;
         public System.Windows.Forms.Button confirm;
+        public System.Windows.Forms.TextBox description;
     }
 }
