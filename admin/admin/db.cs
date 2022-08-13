@@ -157,24 +157,6 @@ namespace admin_db
 			this.id = id;
 			this.name = name;
 		}
-		public static bool FindName(MySqlConnection conn, string name)
-        {
-			if (name == "") return false;
-			try
-			{
-				string sql = String.Format("select Id_category from categorie where nom='{0}'", name);
-				MySqlCommand cmd = new MySqlCommand(sql, conn);
-				MySqlDataReader rdr = cmd.ExecuteReader(); ;
-				if (rdr.Read()) return true;
-				return false;
-			}
-
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				return false;
-            }
-        }
 
 		public int Check(MySqlConnection conn) {
 			if (this.name == "") return Status.MISSING_FIELD;
@@ -523,6 +505,46 @@ namespace admin_db
 			}
 		}
 
+		public bool FindCategory(MySqlConnection conn)
+		{
+			if (this.cat.name == "") return false;
+			try
+			{
+				string sql = String.Format("select Id_categorie from categorie where nom='{0}'", this.cat.name);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				if (rdr.Read()) return true;
+				return false;
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return false;
+			}
+		}
+
+		public int GetCategory(MySqlConnection conn)
+        {
+			if (this.cat.id == -1) return Status.MISSING_FIELD;
+			try
+			{
+				string sql = String.Format("select nom from categorie where Id_categorie={0}", this.cat.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Read();
+				this.cat.name = rdr["nom"].ToString();
+				rdr.Close();
+				return Status.NO_ERROR;
+			}
+
+			catch (Exception ex)
+			{
+				Console.WriteLine("An error occured during the database process : {0}", ex.Message);
+				return Status.DB_ERROR;
+			}
+		}
+
 		public int Add(MySqlConnection conn)
 		{
 			int st = this.Check(conn);
@@ -545,16 +567,21 @@ namespace admin_db
 
 		public int Edit(MySqlConnection conn)
 		{
-			if (this.name != "" && this.desc != "" && this.price != 0 && this.id != -1)
+			if (this.desc != "" && this.price != 0 && this.id != -1 && this.cat.name != "")
 			{
 				try
 				{
 					Console.WriteLine("Trying to edit product table ...");
-					string sql = String.Format("update produit set nom='{0}', description='{1}', prix={2}) where Id_produit={3}", this.name, this.desc, this.ToPointStr(this.price.ToString()), this.id);
+					string sql = String.Format("update produit set description='{0}', prix={1} where Id_produit={2}", this.desc, this.ToPointStr(this.price.ToString()), this.id);
 					MySqlCommand cmd = new MySqlCommand(sql, conn);
 					MySqlDataReader rdr = cmd.ExecuteReader();
 					rdr.Close();
-					Console.WriteLine("Table edited successfully !");
+					Console.WriteLine("Table edited successfully ! Now editing the category name in the right table ...");
+					sql = String.Format("update categorie set nom='{0}' where Id_categorie={1}", this.cat.name, this.cat.id);
+					cmd = new MySqlCommand(sql, conn);
+					rdr = cmd.ExecuteReader();
+					rdr.Close();
+					Console.WriteLine("Tables have been edited successfully !");
 					return Status.NO_ERROR;
 				}
 
@@ -594,6 +621,32 @@ namespace admin_db
 				}
 			}
 		}
+
+		public int ReadFromId (MySqlConnection conn)
+        {
+			if (this.id == -1) return Status.MISSING_FIELD;
+			try
+            {
+				string sql = String.Format("select * from produit where Id_produit={0}", this.id);
+				MySqlCommand cmd = new MySqlCommand(sql, conn);
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				rdr.Read();
+				this.id = Int32.Parse(rdr["Id_produit"].ToString());
+				this.name = rdr["nom"].ToString();
+				this.price = Double.Parse(rdr["prix"].ToString());
+				this.desc = rdr["description"].ToString();
+				this.addedAt = rdr["addedAt"].ToString();
+				this.cat.id = Int32.Parse(rdr["Id_categorie"].ToString());
+				rdr.Close();
+				return Status.NO_ERROR;
+            }
+
+			catch (Exception ex)
+            {
+				Console.WriteLine("An error occured during the database process : {0}", ex.Message);
+				return Status.DB_ERROR;
+            }
+        }
 
 		public int Read(MySqlConnection conn)
 		{

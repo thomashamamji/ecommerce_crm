@@ -19,23 +19,26 @@ namespace admin
             InitializeComponent();
         }
 
-        public void edit_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
+        public void edit_Click(object sender, EventArgs e, MySqlConnection conn, int productId)
         {
+            Console.WriteLine("Edit button clicked from the product windows.");
             MyProduct table = new MyProduct();
-            table.id = sessionId;
-            int st = table.Read(conn);
+            table.id = productId;
+            int st = table.ReadFromId(conn);
             Status.HandleCode(st);
+            if (st < Status.NO_ERROR) return; // Interrupt the process
+            st = table.GetCategorie(conn);
+            Status.HandleCode(st);
+            if (st < Status.NO_ERROR) return; // Interrupt the process
             admin.Form7 editForm = new admin.Form7();
-            if (st == Status.NO_ERROR) // successfull
-            {
-                editForm.category.Text = table.cat.name;
-                editForm.price.Text = table.price.ToString();
-                editForm.description.Text = table.desc;
-                editForm.ShowDialog();
-            }
+            editForm.category.Text = table.cat.name;
+            editForm.price.Text = table.price.ToString();
+            editForm.description.Text = table.desc;
 
             // Here handle the click event of the edit confirm button
-            editForm.confirm.Click += new EventHandler((s, ev) => editForm.confirm_Click(s, ev, conn, sessionId));
+            editForm.confirm.Click += new EventHandler((s, ev) => editForm.confirm_Click(s, ev, conn, productId));
+
+            editForm.ShowDialog();
         }
     }
 }

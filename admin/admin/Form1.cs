@@ -243,10 +243,11 @@ namespace admin
                 item.productSells.Text = table.nbSells.ToString();
                 item.productCategorie.Text = table.cat.name.ToString();
                 // Must count other tables for the rest
-                item.ShowDialog();
 
                 // Handling event here
-                item.edit.Click += new EventHandler((s, ev) => item.edit_Click(s, ev, conn, sessionId));
+                item.edit.Click += new EventHandler((s, ev) => item.edit_Click(s, ev, conn, table.id));
+
+                item.ShowDialog();
             }
         }
 

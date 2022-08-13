@@ -19,17 +19,26 @@ namespace admin
             InitializeComponent();
         }
 
-        public void confirm_Click(object sender, EventArgs e, MySqlConnection conn, int sessionId)
+        public void confirm_Click(object sender, EventArgs e, MySqlConnection conn, int productId)
         {
             MyProduct product = new MyProduct();
+
+            // Setting the new fields
+            product.id = productId;
+            product.price = Int32.Parse(this.price.Text);
+            product.desc = this.description.Text;
+            product.cat.name = this.category.Text;
+
             // Check if the new values are correct
-            bool categoryNameExists = MyCategorie.FindName(conn, this.category.Text);
-            if (!categoryNameExists)
+            bool categoryNameExists = product.FindCategory(conn);
+            if (categoryNameExists)
             {
                 // We can edit table with new data
                 int st = product.Edit(conn);
                 Status.HandleCode(st);
+
             }
+            else Status.ShowMessage(false, "Catégorie introuvable.");
         }
     }
 }
