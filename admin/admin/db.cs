@@ -163,9 +163,11 @@ namespace admin_db
 			try {
 				string sql = String.Format("select Id_category from categorie where nom='{0}'", this.name);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
-				MySqlDataReader rdr = cmd.ExecuteReader(); ;
-				if (rdr.Read()) return Status.ALREADY_EXISTS;
-				return Status.NO_ERROR;
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				int st = Status.NO_ERROR;
+				if (rdr.Read()) st = Status.ALREADY_EXISTS;
+				rdr.Close();
+				return st;
 			}
 
 			catch (Exception ex) {
@@ -513,8 +515,9 @@ namespace admin_db
 				string sql = String.Format("select Id_categorie from categorie where nom='{0}'", this.cat.name);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
-				if (rdr.Read()) return true;
-				return false;
+				bool isFound = rdr.Read() == true;
+				rdr.Close();
+				return isFound;
 			}
 
 			catch (Exception ex)
@@ -683,9 +686,11 @@ namespace admin_db
 			{
 				string sql = String.Format("select Id_produit from produit where nom='{0}'", this.name);
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
-				MySqlDataReader rdr = cmd.ExecuteReader(); ;
-				if (rdr.Read()) return Status.ALREADY_EXISTS;
-				return Status.NO_ERROR;
+				MySqlDataReader rdr = cmd.ExecuteReader();
+				int st = Status.NO_ERROR;
+				if (rdr.Read()) st = Status.ALREADY_EXISTS;
+				rdr.Close();
+				return st;
 			}
 
 			catch (Exception ex)

@@ -270,7 +270,7 @@ namespace Gestion_e_commerce
             try
             {
                 // Database auth
-                string DB_HOST = "192.168.1.103";
+                string DB_HOST = "192.168.1.77";
                 string DB_USER = "ecommerce_admin_app_dbuser";
                 string DB_PASS = "app12345$$$$$";
                 string DB_NAME = "ecommerce_admin_app_db";

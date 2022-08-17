@@ -29,7 +29,7 @@ namespace admin
             {
                 try
                 {
-                    Console.WriteLine("Trying to create a new product ...");
+                    Console.WriteLine("Trying to add a new product ...");
                     MyProduct table = new MyProduct();
                     table.userId = sessionId; // Will change later with the user auth
                     table.cat.name = this.productCategorie.Text; // User has to choose a categorie
@@ -39,7 +39,7 @@ namespace admin
                     table.desc = this.productDescription.Text;
                     int st = table.Add(conn);
                     Status.HandleCode(st);
-                    Console.WriteLine("Ended creating the product !");
+                    Console.WriteLine("Ended adding the product !");
                     // Show a success panel ...
                     // Refresh the displayed list
                 }
